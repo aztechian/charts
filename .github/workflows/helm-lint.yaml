@@ -36,5 +36,5 @@ jobs:
       - name: Run helm lint
         run: |
           for c in $(find . -name Chart.yaml); do
-            helm lint ${c##*/}
+            helm lint $(basename ${c%%/Chart.yaml})
           done;
