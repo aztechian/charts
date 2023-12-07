@@ -6,9 +6,10 @@ on:
     branches:
       - main
       - master
+      - wftest
 
 jobs:
-  release:
+  setup:
     # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
     # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
     permissions:
@@ -24,12 +25,10 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-
-      - name: Install Helm
-        uses: azure/setup-helm@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
+  
+  release:
+    runs-on: ubuntu-latest
+    steps:
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
         env:
@@ -37,3 +36,8 @@ jobs:
         with:
           charts_dir: .
 
+  publish:
+    needs: release
+    uses: aztechian/charts/.github/workflows/helm-publish.yaml@main
+    with:
+      chart_names: ${{ needs.release.outputs.changed_charts }}
