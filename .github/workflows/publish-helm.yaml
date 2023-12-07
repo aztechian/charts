@@ -35,10 +35,10 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Install Helm
-        uses: azure/setup-helm@v3
-        with: 
-          token: ${{ secrets.GITHUB_TOKEN }}
+      #- name: Install Helm
+      #  uses: azure/setup-helm@v3
+      #  with: 
+      #    token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -51,4 +51,4 @@ jobs:
         with:
           repo: s3://repos.imartin.io/charts
           chart: ${{ inputs.chart_path }}
-          force: false
+          forceRelease: false
