@@ -10,12 +10,6 @@ on:
 
 jobs:
   setup:
-    # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
-    # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
-    permissions:
-      contents: write
-      id-token: write
-
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,6 +23,11 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
   
   release:
+    # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
+    # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
+    permissions:
+      contents: write
+    needs: setup
     runs-on: ubuntu-latest
     steps:
       - name: Run chart-releaser
@@ -39,6 +38,10 @@ jobs:
           charts_dir: .
 
   publish:
+    permissions:
+      contents: write
+      id-token: write
+
     needs: release
     uses: aztechian/charts/.github/workflows/helm-publish.yaml@wftest
     with:
