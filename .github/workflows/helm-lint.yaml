@@ -33,5 +33,4 @@ jobs:
 
       - name: Run helm lint
         run: |
-          cd helm
           helm lint .
