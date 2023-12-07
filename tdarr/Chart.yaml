@@ -1,0 +1,8 @@
+apiVersion: v2
+appVersion: 2.16.01
+version: 1.0.0
+type: application
+name: tdarr
+maintainers:
+  - name: Ian Martin
+    email: ian@imartin.net

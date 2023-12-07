@@ -1,0 +1,120 @@
+image:
+  repository: ghcr.io/haveagitgat/tdarr
+  tag: ""
+
+server:
+  config:
+    existingConfigMap: ""
+  # settings for tdarr server configuration file
+  apiKey: ""
+  ffmpegVersion: 6
+  ffmpegPath: ""
+  mkvpropeditPath: ""
+  handbrakePath: ""
+  ccextractorPath: ""
+  timezone: Europe/London
+  puid: 1000
+  pgid: 1000
+  umask: "002"
+  logLevel: info
+  cronPluginUpdate: ""
+  openBrowser: true
+  # end of settings
+  nvidia: true
+  intel: true
+  persistence:
+    enabled: true
+    existingClaim: ""
+    size: 1Gi
+    storageClass: ""
+    annotations: {}
+    subPath: ""
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+service:
+  type: ClusterIP
+  annotations: {}
+  labels: {}
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+  externalTrafficPolicy: Cluster
+  clusterIP: None
+  serverPort: 8266
+  webPort: 8265
+
+ingress:
+  enabled: true # false
+  annotations: {}
+  labels: {}
+  path: /
+  pathType: ImplementationSpecific
+  hostname: tdarr.127.0.0.1.nip.io # tdarr.local
+  tls: []
+  extraHosts: []
+
+serviceAccount:
+  create: false
+  name: ""
+  annotations: {}
+  labels: {}
+
+library:
+  enabled: true
+  existingClaim: ""
+  readOnly: false
+  subPath: ""
+  volume:
+    size: 1Gi
+    storageClass: ""
+    annotations: {}
+    selector: {}
+
+node:
+  enabled: true
+  image:
+    repository: ghcr.io/haveagitgat/tdarr_node
+    tag: ""
+  # -- you likely don't want a resources definition on the nodes, that way it will use anything available, but will also
+  # be the first to be evicted if there is a resource crunch. This is the `BestEffort` QoS class, and it is set for containers with undefined resources.
+  resources: {}
+  port: 8268
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  ffmpegVersion: 6
+  ffmpegPath: ""
+  mkvpropeditPath: ""
+  handbrakePath: ""
+  ccextractorPath: ""
+  puid:
+  pgid:
+  umask: 
+  logLevel: ""
+  cronPluginUpdate: ""
+  openBrowser: true
+
+# -- used for mounting additional volumes that already exist to the server and all nodes
+extraVolumes: []
+  # - name:
+  #   claimName:
+  #   mountPath:
+  #   subPath:
+  #   readOnly:
+
+# -- used for creating additional PVCs on the server template to mount on the server and all nodes
+extraClaims: []
+  # - name:
+  #   annotations:
+  #   readOnly:
+  #   size:
+  #   storageClass:
+  #   selector: {}
+  #   mountPath:
+  #   subPath:
+  #   readOnly:
