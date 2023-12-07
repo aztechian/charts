@@ -3,20 +3,13 @@ name: Publish Helm Chart
 on:
   workflow_call:
     inputs:
-      chart_path:
-        default: .
-        required: false
+      chart_names:
+        description: A comma separated list of chart names to publish to S3. This should be the output of helm/chart-releaser-action.
+        required: true
         type: string
-  workflow_run:
-    workflows: ["Helm Chart linting"]
-    types:
-      - completed
-    branches:
-      - main
 
 jobs:
-  build:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  setup:
     # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
     # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
     permissions:
@@ -24,6 +17,26 @@ jobs:
       id-token: write
 
     runs-on: ubuntu-latest
+    steps:
+      - name: convert intput to array
+        id: input-convert
+        run: |
+          # the sed replaces , with , " so that "inside elements" are correct format. Then wraps the ends with ["
+          names=${{ inputs.chart_names }}
+          echo "chart_names=[\"${names}\"]" | sed 's/,/\", \"/g' >> $GITHUB_OUTPUT
+
+    outputs:
+      chart_names: ${{ steps.input-convert.outputs.chart_names }}
+
+  publish:
+    needs: setup
+    runs-on: ubuntu-latest
+    if: inputs.chart_names != ''
+    strategy:
+      fail-fast: true
+      max-parallel: 1
+      matrix:
+        chart: ${{ fromJson(needs.setup.outputs.chart_names) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -35,13 +48,8 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      #- name: Install Helm
-      #  uses: azure/setup-helm@v3
-      #  with: 
-      #    token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::642939544760:role/HelmChartPublish
           aws-region: us-east-2
@@ -50,5 +58,5 @@ jobs:
         uses: shellbear/helm-release-action@v0.1
         with:
           repo: s3://repos.imartin.io/charts
-          chart: ./tdarr
+          chart: ${{ matrix.chart }}
           forceRelease: false
