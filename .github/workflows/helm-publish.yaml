@@ -18,6 +18,26 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+      - name: convert intput to array
+        id: input-convert
+        run: |
+          # the sed replaces , with , " so that "inside elements" are correct format. Then wraps the ends with ["
+          names=${{ inputs.chart_names }}
+          echo "chart_names=[\"${names}\"]" | sed 's/,/\", \"/g' >> $GITHUB_OUTPUT
+
+    outputs:
+      chart_names: ${{ steps.input-convert.outputs.chart_names }}
+
+  publish:
+    needs: setup
+    runs-on: ubuntu-latest
+    if: ${{ input.chart_names != "" }}
+    strategy:
+      fail-fast: true
+      max-parallel: 1
+      matrix:
+        chart: ${{ fromJson(needs.setup.outputs.chart_names) }}
+    steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -28,30 +48,12 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: convert intput to array
-        id: input-convert
-        run: |
-          # the sed replaces , with , " so that "inside elements" are correct format. Then wraps the ends with ["
-          names=${{ inputs.chart_names }}
-          echo "chart_names=[\"${names}\"]" | sed 's/,/\", \"/g' >> $GITHUB_OUTPUT
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::642939544760:role/HelmChartPublish
           aws-region: us-east-2
-    outputs:
-      chart_names: ${{ steps.input-convert.outputs.chart_names }}
 
-  publish:
-    needs: setup
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      max-parallel: 1
-      matrix:
-        chart: ${{ fromJson(needs.setup.outputs.chart_names) }}
-    steps:
       - name: Helm release
         uses: shellbear/helm-release-action@v0.1
         with:
