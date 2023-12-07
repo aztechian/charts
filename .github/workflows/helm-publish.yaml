@@ -32,10 +32,11 @@ jobs:
         id: input-convert
         run: |
           # the sed replaces , with , " so that "inside elements" are correct format. Then wraps the ends with ["
-          echo "chart_names=[\"${inputs.chart_names}\"]" | sed 's/,/\", \"/g' >> $GITHUB_OUTPUT
+          names=${{ inputs.chart_names }}
+          echo "chart_names=[\"${names}\"]" | sed 's/,/\", \"/g' >> $GITHUB_OUTPUT
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::642939544760:role/HelmChartPublish
           aws-region: us-east-2
