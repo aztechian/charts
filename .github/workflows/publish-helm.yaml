@@ -1,4 +1,4 @@
-name: Release Helm Chart
+name: Publish Helm Chart
 
 on:
   workflow_call:
@@ -35,8 +35,8 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      # - name: Install Helm
-      #   uses: azure/setup-helm@v3
+      - name: Install Helm
+        uses: azure/setup-helm@v3
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
