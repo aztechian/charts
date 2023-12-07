@@ -38,6 +38,6 @@ jobs:
 
   publish:
     needs: release
-    uses: aztechian/charts/.github/workflows/helm-publish.yaml@main
+    uses: aztechian/charts/.github/workflows/helm-publish.yaml@wftest
     with:
       chart_names: ${{ needs.release.outputs.changed_charts }}
