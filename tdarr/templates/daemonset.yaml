@@ -1,0 +1,120 @@
+{{- if .Values.node.enabled -}}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "tdarr.fullname" . }}-node
+spec:
+  selector:
+    matchLabels: {{- include "tdarr.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "tdarr.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.node.tolerations }}
+      tolerations:
+      {{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.node.nodeSelector }}
+      nodeSelector: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.node.affinity }}
+      affinity: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: tdarr-node
+          image: {{ .Values.node.image.repository }}:{{ .Values.node.image.tag | default .Chart.AppVersion }}
+          ports:
+            - containerPort: {{ .Values.node.port }}
+              name: node
+              protocol: TCP
+          env:
+            {{- if .Values.server.nvidia }}
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: all
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: all
+            {{- end }}
+            {{- if .Values.server.timezone }}
+            - name: TZ
+              value: {{ .Values.server.timezone | quote }}
+            {{- end }}
+            - name: inContainer
+              value: "true"
+            - name: serverIP
+              value: {{ include "tdarr.fullname" . }}
+            - name: serverPort
+              value: {{ .Values.service.port | quote }}
+            - name: PUID
+              value: {{ .Values.node.puid | default .Values.server.puid | quote }}
+            - name: PGID
+              value: {{ .Values.node.pgid | default .Values.server.pgid | quote }}
+            - name: UMASK
+              value: {{ .Values.node.umask | default .Values.server.umask | quote }}
+            {{- if .Values.node.ffmpegPath }}
+            - name: ffmpegPath
+              value: {{ .Values.node.ffmpegPath | quote }}
+            {{- end }}
+            {{- if .Values.node.mkvpropeditPath }}
+            - name: mkvpropeditPath
+              value: {{ .Values.node.mkvpropeditPath | quote }}
+            {{- end }}
+            {{- if .Values.node.handbrakePath }}
+            - name: handbrakePath
+              value: {{ .Values.node.handbrakePath | quote }}
+            {{- end }}
+            {{- if .Values.node.ccextractorPath }}
+            - name: ccextractorPath
+              value: {{ .Values.node.ccextractorPath | quote }}
+            {{- end }}
+            {{- if .Values.node.openBrowser }}
+            - name: openBrowser
+              value: {{ .Values.node.openBrowser | quote }}
+            {{- end }}
+            - name: ffmpegVersion
+              value: {{ .Values.node.ffmpegVersion | default .Values.server.ffmpegVersion | quote }}
+            - name: logLevel
+              value: {{ .Values.node.logLevel | default .Values.server.logLevel | upper | quote }}
+            - name: nodeID
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          resources:
+            {{- toYaml .Values.node.resources | nindent 12 }}
+          volumeMounts:
+            - name: library
+              mountPath: /library
+              readOnly: {{ default "false" .Values.library.readOnly }}
+              {{- if .Values.library.subPath }}
+              subPath: {{ .Values.library.subPath }}
+              {{- end }}
+            {{- range (concat .Values.extraVolumes .Values.extraClaims) }}
+            - name: {{ .name }}
+              mountPath: {{ default (printf "/%s" .name) .mount }}
+              readOnly: {{ default "false" .readOnly }}
+              {{- if .subpath }}
+              subPath: {{ .subPath }}
+              {{- end }}
+            {{- end }}
+      volumes:
+        - name: library
+          {{- if .Values.library.enabled }}
+          persistentVolumeClaim:
+            {{- if .Values.library.existingClaim }}
+            claimName: {{ .Values.library.existingClaim }}
+            {{- else }}
+            claimName: {{ include "tdarr.fullname" . }}-library
+            {{- end }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        {{- range .Values.extraVolumes }}
+        - name: {{ .name }}
+          persistentVolumeClaim:
+            claimName: {{ .claimName }}
+        {{- end }}
+        {{- range .Values.extraClaims }}
+        - name: {{ .name }}
+          persistentVolumeClaim:
+            claimName: {{ print "%s-%s-0" .name (include "tdarr.fullname" .)}}
+        {{- end }}
+{{- end }}

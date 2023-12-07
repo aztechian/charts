@@ -1,0 +1,27 @@
+{{- if not .Values.library.existingClaim }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+{{- with .Values.library.volume }}
+metadata:
+  name: {{ include "tdarr.fullname" $ }}-library
+  labels: {{- include "tdarr.labels" $ | nindent 4 }}
+  {{- with .annotations }}
+  annotations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .accessMode | default "ReadWriteMany" }}
+  resources:
+    requests:
+      storage: {{ .size }}
+  {{- if .storageClass }}
+  storageClassName: {{ .storageClass }}
+  {{- end }}
+  {{- if .selector }}
+  selector:
+    matchLabels:
+      {{- toYaml .selector | nindent 6 }}
+  {{- end }}
+{{- end }}
+{{- end }}

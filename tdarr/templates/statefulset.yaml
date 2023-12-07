@@ -1,0 +1,162 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "tdarr.fullname" . }}
+  labels: {{- include "tdarr.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{- include "tdarr.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "tdarr.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: tdarr
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+          ports:
+            - containerPort: {{ .Values.service.serverPort }}
+              name: server
+            - containerPort: {{ .Values.service.webPort }}
+              name: web
+          env:
+            {{- if .Values.server.apiKey }}
+            - name: TDARR_API_KEY
+              value: {{ .Values.server.apiKey }}
+            {{- end }}
+            {{- if .Values.server.nvidia }}
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: all
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: all
+            {{- end }}
+            - name: internalNode
+              value: "false" # don't use in kubernetes. Run a seperate node container
+            - name: inContainer
+              value: "true"
+            - name: ffmpegVersion
+              value: {{ .Values.server.ffmpegVersion | quote }}
+            {{- if .Values.server.timezone }}
+            - name: TZ
+              value: {{ .Values.server.timezone | quote }}
+            {{- end }}
+            - name: PUID
+              value: {{ .Values.server.puid | quote }}
+            - name: PGID
+              value: {{ .Values.server.pgid | quote }}
+            {{- if .Values.server.umask }}
+            - name: UMASK
+              value: {{ .Values.server.umask | quote }}
+            {{- end }}
+            {{- if .Values.server.ffmpegPath }}
+            - name: ffmpegPath
+              value: {{ .Values.server.ffmpegPath | quote }}
+            {{- end }}
+            {{- if .Values.server.mkvpropeditPath }}
+            - name: mkvpropeditPath
+              value: {{ .Values.server.mkvpropeditPath | quote }}
+            {{- end }}
+            {{- if .Values.server.handbrakePath }}
+            - name: handbrakePath
+              value: {{ .Values.server.handbrakePath | quote }}
+            {{- end }}
+            {{- if .Values.server.ccextractorPath }}
+            - name: ccextractorPath
+              value: {{ .Values.server.ccextractorPath | quote }}
+            {{- end }}
+            {{- if .Values.server.openBrowser }}
+            - name: openBrowser
+              value: {{ .Values.server.openBrowser | quote }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.server.resources | nindent 12 }}
+          volumeMounts:
+            - name: library
+              mountPath: /library
+              readOnly: {{ default "false" .Values.library.readOnly }}
+              {{- if .Values.library.subPath }}
+              subPath: {{ .Values.library.subPath }}
+              {{- end }}
+            - name: server
+              mountPath: /app/server
+            {{- range (concat .Values.extraVolumes .Values.extraClaims) }}
+            - name: {{ .name }}
+              mountPath: {{ default (printf "/%s" .name) .mount }}
+              readOnly: {{ default "false" .readOnly }}
+              {{- if .subpath }}
+              subPath: {{ .subPath }}
+              {{- end }}
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /api/v2/status
+              port: server
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /api/v2/status
+              port: web
+            initialDelaySeconds: 15
+            periodSeconds: 5
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: {{ include "tdarr.fullname" . }}
+      {{- end }}
+      securityContext:
+        fsGroup: {{ .Values.server.pgid }}
+      volumes:
+        {{- if .Values.server.persistence.existingClaim }}
+        - name: server
+          persistentVolumeClaim:
+            claimName: {{ .Values.server.persistence.existingClaim }}
+        {{- end }}
+        - name: library
+          {{- if .Values.library.enabled }}
+          persistentVolumeClaim:
+            {{- if .Values.library.existingClaim }}
+            claimName: {{ .Values.library.existingClaim }}
+            {{- else }}
+            claimName: {{ include "tdarr.fullname" . }}-library
+            {{- end }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        {{- range .Values.extraVolumes }}
+        - name: {{ .name }}
+          persistentVolumeClaim:
+            claimName: {{ .claimName }}
+        {{- end }}
+  volumeClaimTemplates:
+    {{- if not .Values.server.persistence.existingClaim }}
+    - metadata:
+        name: server
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.server.persistence.size }}
+        storageClassName: {{ .Values.server.persistence.storageClass }}
+    {{- end }}
+    {{- range .Values.extraClaims }}
+    - apiVersion: v1	
+      kind: PersistentVolumeClaim
+      metadata:
+        name: {{ .name }}
+        {{- with .annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      spec:
+        accessModes: ["ReadWriteMany", "ReadWriteOnce", "ReadOnlyMany"]
+        {{- if .storageClass }}
+        storageClassName: {{ .storageClass }}
+        {{- end }}
+        {{- if .selector }}
+        selector:
+          {{ toYaml . | nindent 12 }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .size | default "1Gi" }}
+    {{ end -}}
