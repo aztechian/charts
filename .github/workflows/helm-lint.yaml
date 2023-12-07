@@ -48,7 +48,7 @@ jobs:
         run: |
           hd_ver=$(grep '^helm-docs' .tool-versions| cut -f2 -d ' ')
           echo "::info helm-docs version = ${hd_ver}"
-          curl -sL "https://github.com/norwoodj/helm-docs/releases/download/v${hd_ver}/helm-docs_Linux_x86_64.tar.gz" | tar xzf - && \
+          curl -sL "https://github.com/norwoodj/helm-docs/releases/download/v${hd_ver}/helm-docs_${hd_ver}_Linux_x86_64.tar.gz" | tar xzf - && \
           chmod +x ./helm-docs
           mv ./helm-docs /usr/local/bin/
       - name: Run helm-docs
