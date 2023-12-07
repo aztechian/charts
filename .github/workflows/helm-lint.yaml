@@ -33,4 +33,8 @@ jobs:
 
       - name: Run helm lint
         run: |
-          helm lint .
+          for c in $(find . -name Chart.yaml); do
+            cd $(dirname "${c}")
+            echo "Linting chart: ${PWD}"
+            helm lint .
+          done;
