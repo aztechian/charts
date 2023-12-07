@@ -4,7 +4,8 @@ on:
   workflow_call:
     inputs:
       chart_path:
-        required: true
+        default: .
+        required: false
         type: string
   workflow_run:
     workflows: ["Helm Chart linting"]
@@ -50,5 +51,5 @@ jobs:
         uses: shellbear/helm-release-action@v0.1
         with:
           repo: s3://repos.imartin.io/charts
-          chart: ${{ inputs.chart_path }}
+          chart: .
           forceRelease: false
