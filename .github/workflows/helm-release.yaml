@@ -6,7 +6,9 @@ on:
     branches:
       - main
       - master
-      - wftest
+    tags:
+      # could be triggered by a global release across all charts, which would be of form "v.N.N.N"
+      - v.*
 
 jobs:
   release:
@@ -34,7 +36,7 @@ jobs:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           charts_dir: .
-          
+
     outputs:
       changed_charts: ${{ steps.releaser.outputs.changed_charts }}
 

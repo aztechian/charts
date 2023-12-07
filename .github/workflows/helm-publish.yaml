@@ -59,4 +59,4 @@ jobs:
         with:
           repo: s3://repos.imartin.io/charts
           chart: ${{ matrix.chart }}
-          forceRelease: true # TODO: false
+          forceRelease: false
