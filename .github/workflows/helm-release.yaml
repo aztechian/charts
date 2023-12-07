@@ -47,6 +47,6 @@ jobs:
       id-token: write
 
     needs: release
-    uses: aztechian/charts/.github/workflows/helm-publish.yaml@wftest
+    uses: aztechian/charts/.github/workflows/helm-publish.yaml@main
     with:
       chart_names: ${{ needs.release.outputs.changed_charts }}
