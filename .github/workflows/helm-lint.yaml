@@ -4,9 +4,11 @@ on:
   pull_request:
     branches:
       - main
+      - master
   push:
     branches:
       - main
+      - master
     tags:
       - v*
 
@@ -34,7 +36,5 @@ jobs:
       - name: Run helm lint
         run: |
           for c in $(find . -name Chart.yaml); do
-            cd $(dirname "${c}")
-            echo "Linting chart: ${PWD##*/}"
-            helm lint .
+            helm lint ${c##*/}
           done;

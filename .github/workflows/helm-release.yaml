@@ -8,7 +8,7 @@ on:
       - master
     tags:
       # could be triggered by a global release across all charts, which would be of form "v.N.N.N"
-      - v.*
+      - v*
 
 jobs:
   release:
