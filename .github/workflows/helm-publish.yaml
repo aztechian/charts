@@ -13,11 +13,10 @@ on:
       - completed
     branches:
       - main
-    tags:
-      - v*
 
 jobs:
   build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
     # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
     permissions:
@@ -51,5 +50,5 @@ jobs:
         uses: shellbear/helm-release-action@v0.1
         with:
           repo: s3://repos.imartin.io/charts
-          chart: .
+          chart: ./tdarr
           forceRelease: false
