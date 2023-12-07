@@ -31,7 +31,7 @@ jobs:
   publish:
     needs: setup
     runs-on: ubuntu-latest
-    if: ${{ inputs.chart_names != "" }}
+    if: inputs.chart_names != ''
     strategy:
       fail-fast: true
       max-parallel: 1
