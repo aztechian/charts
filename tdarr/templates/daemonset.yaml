@@ -110,7 +110,7 @@ spec:
         {{- range .Values.extraVolumes }}
         - name: {{ .name }}
           persistentVolumeClaim:
-            claimName: {{ .claimName }}
+            claimName: {{ .claimName | default .name }}
         {{- end }}
         {{- range .Values.extraClaims }}
         - name: {{ .name }}

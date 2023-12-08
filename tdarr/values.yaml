@@ -1,27 +1,41 @@
 image:
   repository: ghcr.io/haveagitgat/tdarr
+  # -- the image tag value
+  # @default -- the value from Chart.appVersion
   tag: ""
 
 server:
-  config:
-    existingConfigMap: ""
   # settings for tdarr server configuration file
+  # -- If using Tdarr Pro, your API Key.
   apiKey: ""
+  # -- Override a specific version of ffmpeg used for transcode.
   ffmpegVersion: 6
+  # -- Specify the path to a custom ffmpeg executable to use.
   ffmpegPath: ""
   mkvpropeditPath: ""
   handbrakePath: ""
   ccextractorPath: ""
+  # -- The timezone used by the server process. Will be used for all nodes as well.
   timezone: Europe/London
+  # -- A User ID for the Tdarr process to run as. Note, that the default docker image must
+  # initially start as root(0) and then switches to this UID/GID. So the pod must still run
+  # as root, although in reality this security risk is only in place for a moment during startup.
   puid: 1000
+  # -- A Group ID for the Tdarr process to run as.
   pgid: 1000
+  # -- A umask value for files that are created by Tdarr.
   umask: "002"
+  # -- Set the logging level of the Tdarr server (also used as the default value for nodes).
   logLevel: info
   cronPluginUpdate: ""
   openBrowser: true
   # end of settings
+  # -- Set environment variables that tell Tdarr to use NVIDIA hardware for transcodes.
   nvidia: true
+  # -- set environment variabels that tell Tdarr to use Intel GPU hardware for transcodes.
   intel: true
+  # -- Configure persistence for the Tdarr server. Note, this is the server configuration only
+  # If you want additional persistence for libraries, outputs, etc see `library` and `extraVolumes`/`extraClaims`
   persistence:
     enabled: true
     existingClaim: ""
@@ -29,6 +43,7 @@ server:
     storageClass: ""
     annotations: {}
     subPath: ""
+  # -- Resource requests and limits for the Tdarr Server
   resources:
     limits:
       cpu: 1000m
@@ -48,27 +63,41 @@ service:
   serverPort: 8266
   webPort: 8265
 
+# -- Ingress configuration to the Tdarr Server.
 ingress:
-  enabled: true # false
+  # -- Turn on Ingress creation.
+  enabled: false
   annotations: {}
   labels: {}
   path: /
   pathType: ImplementationSpecific
-  hostname: tdarr.127.0.0.1.nip.io # tdarr.local
+  # -- The primary DNS hostname to route to Tdarr Server
+  hostname: tdarr.local
   tls: []
+  # -- Add additional host/path entries beyond the default value here.
+  # Required fields are: `name`. Optional fields are `path`, `pathType`.
   extraHosts: []
 
+# -- Use a ServiceAccount to run the Tdarr Server with
 serviceAccount:
+  # -- Turn on ServiceAccount creation and usage.
   create: false
   name: ""
   annotations: {}
   labels: {}
 
+# -- Use a persistent volume for a Library source in Tdarr. This must still be configured within the Tdarr application once it is running.
 library:
-  enabled: true
+  # -- Enable the creation of a "Library" PV/PVC for Tdarr. This will also be mounted to all node pods.
+  # @default -- `false` uses an `EmptyDir` mount that will be destroyed on pod termination.
+  enabled: false
+  # -- The name of an existing PVC to use for a Library source. The PVC must be in the same namespace as Tdarr.
   existingClaim: ""
+  # -- Mount the library PVC as "readonly". Not applicable for an EmptyDir
   readOnly: false
+  # -- Mount a subpath of the PVC. (example: "downloads/complete")
   subPath: ""
+  # -- library volume creation information. `library.enabled` must be `true` for this to take effect.
   volume:
     size: 1Gi
     storageClass: ""
@@ -76,7 +105,8 @@ library:
     selector: {}
 
 node:
-  enabled: true
+  # -- Enable running Tdarr Nodes as a daemonset across the cluster.
+  enabled: false
   image:
     repository: ghcr.io/haveagitgat/tdarr_node
     tag: ""
@@ -92,29 +122,39 @@ node:
   mkvpropeditPath: ""
   handbrakePath: ""
   ccextractorPath: ""
+  # -- (int) the Process User ID to use for running Tdarr on the node.
+  # @default -- reuse the PUID given to the server process (default `1000`)
   puid:
+  # -- (int) the Process Group ID to use for running Tdarr on the node.
+  # @default -- reuse the PGID given to the server process (default `1000`)
   pgid:
-  umask: 
+  # -- (string) the umask to use for running Tdarr on the node.
+  # @default -- reuse the PUID given to the server process (default `002`)
+  umask: ""
+  # -- (string) the Tdarr node log level for nodes
+  # @default -- reuse the log level given to the server process (default `info`)
   logLevel: ""
   cronPluginUpdate: ""
   openBrowser: true
 
 # -- used for mounting additional volumes that already exist to the server and all nodes
+# Required fields for each element are: `name`. Optional fields are: `mount`, `claimName`, `subPath`, `readOnly` 
 extraVolumes: []
   # - name:
   #   claimName:
-  #   mountPath:
+  #   mount:
   #   subPath:
   #   readOnly:
 
 # -- used for creating additional PVCs on the server template to mount on the server and all nodes
+# Required fields for each element are: `name`. Optional fields 
+# are `size`, `storageClass`, `selector`, `annotations`, `mount`, `subPath`, `readOnly`
 extraClaims: []
   # - name:
-  #   annotations:
-  #   readOnly:
   #   size:
   #   storageClass:
   #   selector: {}
-  #   mountPath:
+  #   annotations: {}
+  #   mount:
   #   subPath:
   #   readOnly:

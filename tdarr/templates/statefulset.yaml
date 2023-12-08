@@ -125,7 +125,7 @@ spec:
         {{- range .Values.extraVolumes }}
         - name: {{ .name }}
           persistentVolumeClaim:
-            claimName: {{ .claimName }}
+            claimName: {{ .claimName | default .name }}
         {{- end }}
   volumeClaimTemplates:
     {{- if not .Values.server.persistence.existingClaim }}
