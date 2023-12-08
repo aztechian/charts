@@ -43,6 +43,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Install helm-docs
         run: |
@@ -54,20 +56,14 @@ jobs:
 
       - name: Run helm-docs
         run: |
-          helm-docs .
+          helm-docs
 
       - name: Test for changes
         run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git add .
-          mods=$(git diff --name-only --cached)
-          if [[ -z $mods ]]; then
-            exit 0
+          if git diff --exit-code; then
+            echo -e "\n####### Git is clean\n"
           else
-            echo "::debug::$(git diff --cached)"
-            for f in ${mods}; do
-              echo "::warning file=${f},title=${f}::file would be updated by helm-docs"
-            done
+            git status
+            echo -e "\n####### Git changes detected! Check and commit changes !!!\n"
             exit 1
           fi
