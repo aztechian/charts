@@ -79,6 +79,8 @@ jobs:
           fi
   helm-package-check:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -90,12 +92,12 @@ jobs:
         id: latest-tag
         run: |
           git fetch --tags origin 2>/dev/null
-          git describe --tags --abbrev=0 HEAD~
           echo "tag=$(if ! git describe --tags --abbrev=0 HEAD~ 2>/dev/null; then git rev-list --max-parents=0 --first-parent HEAD; fi)" >> $GITHUB_OUTPUT
       
       - name: Find Changed Charts
         id: changed-charts
         run: |
+          echo "::debug::using ${{ steps.latest-tag.outputs.tag }} as the latest tag"
           function filter_charts() {
             while read -r chart; do
               if [[ -d $chart && -f $chart/Chart.yaml ]]; then 
