@@ -73,7 +73,7 @@ jobs:
             for f in ${mods}; do
               echo "::warning file=${f},title=${f}::file would be updated by helm-docs"
             done
-            git commit -m 'Updating READMEs from helm-docs'
+            git commit -m '[BOT] Updating READMEs from helm-docs'
             git push -u origin HEAD
             echo "::notice::The PR has been updated with a new commit"
           fi
@@ -130,7 +130,7 @@ jobs:
             ```
             ${{ steps.changed-charts.outputs.changed }}
             ```
-            
+
             Before merging, you will need to bump the chart version so that it will publish properly. Please update the Chart.yaml of these charts, and push to this PR again.
           comment_tag: releasecheck
           mode: recreate
