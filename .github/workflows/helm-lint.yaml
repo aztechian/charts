@@ -56,7 +56,14 @@ jobs:
 
       - name: Run helm-docs
         run: |
+          head -n 2 README.md
+          head -n 2 LICENSE
+          pwd
+          ls -al
           helm-docs -l debug
+          ls -alr
+          head -n 2 README.md
+          find . -mmin -1 | grep -v '.git'
 
       - name: Test for changes
         run: |
