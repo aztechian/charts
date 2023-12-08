@@ -43,8 +43,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Install helm-docs
         run: |
@@ -68,8 +66,9 @@ jobs:
           if [[ -z $mods ]]; then
             exit 0
           else
-            echo "::debug::$(git diff --cached)"
             for f in ${mods}; do
               echo "::warning file=${f},title=${f}::file would be updated by helm-docs"
             done
+            git commit -m 'Updating READMEs from helm-docs'
+            git push -u origin HEAD
           fi
