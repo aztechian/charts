@@ -72,3 +72,4 @@ jobs:
             for f in ${mods}; do
               echo "::warning file=${f},title=${f}::file would be updated by helm-docs"
             done
+          fi
