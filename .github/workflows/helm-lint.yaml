@@ -77,3 +77,33 @@ jobs:
             git push -u origin HEAD
             echo "::notice::The PR has been updated with a new commit"
           fi
+  helm-package-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for updated helm packages
+        id: releaser
+        uses: helm/chart-releaser-action@v1.6.0
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          charts_dir: .
+          skip_upload: true
+      
+      - name: Comment PR with notice of changed chart
+        if: steps.releaser.outputs.changed_charts != ''
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            Hey there,
+            We noticed that you have modified the following chart(s):
+
+            ```
+            ${{ steps.releaser.outputs.changed_charts }}
+            ```
+            Before merging, you will need to bump the chart version so that it will publish properly. Please update the Chart.yaml of these charts, and push to this PR again.
+          comment_tag: releasecheck
+          mode: recreate
+
+      - name: fail if modified
+        if: steps.releaser.outputs.changed_charts != ''
+        run: exit 1
