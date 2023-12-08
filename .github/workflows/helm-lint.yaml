@@ -51,7 +51,7 @@ jobs:
       - name: Install helm-docs
         run: |
           hd_ver=$(grep '^helm-docs' .tool-versions| cut -f2 -d ' ')
-          echo "::info::helm-docs version = ${hd_ver}"
+          echo "::debug::helm-docs version = ${hd_ver}"
           cd /tmp
           curl -sL "https://github.com/norwoodj/helm-docs/releases/download/v${hd_ver}/helm-docs_${hd_ver}_Linux_x86_64.tar.gz" | tar xzf - && \
           chmod +x ./helm-docs
@@ -75,4 +75,5 @@ jobs:
             done
             git commit -m 'Updating READMEs from helm-docs'
             git push -u origin HEAD
+            echo "::notice::The PR has been updated with a new commit"
           fi
