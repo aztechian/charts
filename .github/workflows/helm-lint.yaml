@@ -130,6 +130,7 @@ jobs:
             ```
             ${{ steps.changed-charts.outputs.changed }}
             ```
+            
             Before merging, you will need to bump the chart version so that it will publish properly. Please update the Chart.yaml of these charts, and push to this PR again.
           comment_tag: releasecheck
           mode: recreate
