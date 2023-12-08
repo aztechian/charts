@@ -89,9 +89,8 @@ jobs:
         id: latest-tag
         run: |
           git fetch --tags 2>/dev/null
-          echo "tag=$(if ! git describe --tags --abbrev=0 HEAD~ 2>/dev/null; then
-            git rev-list --max-parents=0 --first-parent HEAD
-          fi)" >> $GITHUB_OUTPUT
+          git describe --tags --abbrev=0 HEAD~
+          echo "tag=$(if ! git describe --tags --abbrev=0 HEAD~ 2>/dev/null; then git rev-list --max-parents=0 --first-parent HEAD; fi)" >> $GITHUB_OUTPUT
       
       - name: Find Changed Charts
         id: changed-charts
