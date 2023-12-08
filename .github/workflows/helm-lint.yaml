@@ -56,7 +56,7 @@ jobs:
 
       - name: Run helm-docs
         run: |
-          helm-docs
+          helm-docs -l debug
 
       - name: Test for changes
         run: |
