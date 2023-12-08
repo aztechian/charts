@@ -80,17 +80,40 @@ jobs:
   helm-package-check:
     runs-on: ubuntu-latest
     steps:
-      - name: Check for updated helm packages
-        id: releaser
-        uses: helm/chart-releaser-action@v1.6.0
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          charts_dir: .
-          skip_upload: true
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Find base commit
+        id: latest-tag
+        run: |
+          echo "tag=$(if ! git describe --tags --abbrev=0 HEAD~ 2>/dev/null; then
+            git rev-list --max-parents=0 --first-parent HEAD
+          fi)" >> $GITHUB_OUTPUT
+      
+      - name: Find Changed Charts
+        id: changed-charts
+        run: |
+          function filter_charts() {
+            while read -r chart; do
+              if [[ -d $chart && -f $chart/Chart.yaml ]]; then 
+                echo "$chart"
+              fi
+            done
+          }
+
+          function filter_updates() {
+            while read -r chart; do
+              if git diff --quiet ${{ steps.latest-tag.outputs.tag }} -- $chart/Chart.yaml; then
+                echo "$chart"
+              fi
+            done
+          }
+
+          modified=$(git diff --find-renames --name-only ${{ steps.latest-tag.outputs.tag }} -- . | cut -d '/' -f1 | sort | uniq | filter_charts)
+          echo "changed=$(cat "$modified" | filter_updates)" >> $GITHUB_OUTPUT
       
       - name: Comment PR with notice of changed chart
-        if: steps.releaser.outputs.changed_charts != ''
+        if: steps.changed-charts.outputs.changed != ''
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
@@ -98,12 +121,12 @@ jobs:
             We noticed that you have modified the following chart(s):
 
             ```
-            ${{ steps.releaser.outputs.changed_charts }}
+            ${{ steps.changed-charts.outputs.changed }}
             ```
             Before merging, you will need to bump the chart version so that it will publish properly. Please update the Chart.yaml of these charts, and push to this PR again.
           comment_tag: releasecheck
           mode: recreate
 
       - name: fail if modified
-        if: steps.releaser.outputs.changed_charts != ''
+        if: steps.changed-charts.outputs.changed != ''
         run: exit 1
