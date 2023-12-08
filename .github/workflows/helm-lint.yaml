@@ -82,10 +82,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Find base commit
         id: latest-tag
         run: |
+          git fetch --tags 2>/dev/null
           echo "tag=$(if ! git describe --tags --abbrev=0 HEAD~ 2>/dev/null; then
             git rev-list --max-parents=0 --first-parent HEAD
           fi)" >> $GITHUB_OUTPUT
