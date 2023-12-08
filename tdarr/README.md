@@ -1,6 +1,6 @@
 # tdarr
 
-![Version: 1.0.3](https://img.shields.io/badge/Version-1.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.16.01](https://img.shields.io/badge/AppVersion-2.16.01-informational?style=flat-square)
+![Version: 1.0.4](https://img.shields.io/badge/Version-1.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.16.01](https://img.shields.io/badge/AppVersion-2.16.01-informational?style=flat-square)
 
 Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes cluster
 
@@ -16,8 +16,10 @@ Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes 
 |-----|------|---------|-------------|
 | extraClaims | list | `[]` | used for creating additional PVCs on the server template to mount on the server and all nodes Required fields for each element are: `name`. Optional fields  are `size`, `storageClass`, `selector`, `annotations`, `mount`, `subPath`, `readOnly` |
 | extraVolumes | list | `[]` | used for mounting additional volumes that already exist to the server and all nodes Required fields for each element are: `name`. Optional fields are: `mount`, `claimName`, `subPath`, `readOnly`  |
+| fullnameOverride | string | `""` |  |
 | image.repository | string | `"ghcr.io/haveagitgat/tdarr"` |  |
 | image.tag | string | the value from Chart.appVersion | the image tag value |
+| imagePullSecrets | list | `[]` |  |
 | ingress | object | `{"annotations":{},"enabled":false,"extraHosts":[],"hostname":"tdarr.local","labels":{},"path":"/","pathType":"ImplementationSpecific","tls":[]}` | Ingress configuration to the Tdarr Server. |
 | ingress.enabled | bool | `false` | Turn on Ingress creation. |
 | ingress.extraHosts | list | `[]` | Add additional host/path entries beyond the default value here. Required fields are: `name`. Optional fields are `path`, `pathType`. |
@@ -28,6 +30,7 @@ Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes 
 | library.readOnly | bool | `false` | Mount the library PVC as "readonly". Not applicable for an EmptyDir |
 | library.subPath | string | `""` | Mount a subpath of the PVC. (example: "downloads/complete") |
 | library.volume | object | `{"annotations":{},"selector":{},"size":"1Gi","storageClass":""}` | library volume creation information. `library.enabled` must be `true` for this to take effect. |
+| nameOverride | string | `""` |  |
 | node.affinity | object | `{}` |  |
 | node.ccextractorPath | string | `""` |  |
 | node.cronPluginUpdate | string | `""` |  |

@@ -4,6 +4,10 @@ image:
   # @default -- the value from Chart.appVersion
   tag: ""
 
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
 server:
   # settings for tdarr server configuration file
   # -- If using Tdarr Pro, your API Key.

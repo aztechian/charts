@@ -60,3 +60,7 @@ jobs:
           repo: s3://repos.imartin.io/charts
           chart: ${{ matrix.chart }}
           forceRelease: false
+      
+      - name: Fix relative paths in Helm Index
+        run: |
+          helm s3 reindex repo --relative
