@@ -63,4 +63,4 @@ jobs:
       
       - name: Fix relative paths in Helm Index
         run: |
-          helm s3 reindex repo --relative
+          /usr/local/bin/helm s3 reindex repo --relative
