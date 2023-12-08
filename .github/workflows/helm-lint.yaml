@@ -110,7 +110,9 @@ jobs:
           }
 
           modified=$(git diff --find-renames --name-only ${{ steps.latest-tag.outputs.tag }} -- . | cut -d '/' -f1 | sort | uniq | filter_charts)
-          echo "changed=$(cat "$modified" | filter_updates)" >> $GITHUB_OUTPUT
+          echo "::debug::modified = ${modified}"
+          echo "::debug::final changed list = $(echo "$modified" | filter_updates)"
+          echo "changed=$(echo "$modified" | filter_updates)" >> $GITHUB_OUTPUT
       
       - name: Comment PR with notice of changed chart
         if: steps.changed-charts.outputs.changed != ''
