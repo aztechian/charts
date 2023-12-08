@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Helm
         uses: azure/setup-helm@v3
@@ -38,3 +38,42 @@ jobs:
           for c in $(find . -name Chart.yaml); do
             helm lint $(basename ${c%%/Chart.yaml})
           done;
+  helm-docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Install helm-docs
+        run: |
+          hd_ver=$(grep '^helm-docs' .tool-versions| cut -f2 -d ' ')
+          echo "::debug::helm-docs version = ${hd_ver}"
+          cd /tmp
+          curl -sL "https://github.com/norwoodj/helm-docs/releases/download/v${hd_ver}/helm-docs_${hd_ver}_Linux_x86_64.tar.gz" | tar xzf - && \
+          chmod +x ./helm-docs
+          mv ./helm-docs /usr/local/bin/
+
+      - name: Run helm-docs
+        run: |
+          helm-docs
+
+      - name: Test for changes
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git add .
+          mods=$(git diff --name-only --cached)
+          if [[ -z $mods ]]; then
+            exit 0
+          else
+            for f in ${mods}; do
+              echo "::warning file=${f},title=${f}::file would be updated by helm-docs"
+            done
+            git commit -m 'Updating READMEs from helm-docs'
+            git push -u origin HEAD
+            echo "::notice::The PR has been updated with a new commit"
+          fi

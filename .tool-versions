@@ -1,0 +1,4 @@
+helm-docs 1.11.3
+kubectl 1.27.7
+helm 3.13.2
+kubeval 0.16.1
