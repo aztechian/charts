@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: {{ include "tdarr.fullname" . }}
   labels: {{- include "tdarr.labels" . | nindent 4 }}
-  {{- with .Value.server.annotations }}
+  {{- with .Values.server.annotations }}
   annotations:
     {{ toYaml . | nindent 4 }}
   {{- end }}
