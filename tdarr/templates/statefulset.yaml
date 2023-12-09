@@ -87,7 +87,7 @@ spec:
             - name: {{ .name }}
               mountPath: {{ default (printf "/%s" .name) .mount }}
               readOnly: {{ default "false" .readOnly }}
-              {{- if .subpath }}
+              {{- if .subPath }}
               subPath: {{ .subPath }}
               {{- end }}
             {{- end }}
@@ -133,7 +133,9 @@ spec:
         {{- end }}
   volumeClaimTemplates:
     {{- if not .Values.server.persistence.existingClaim }}
-    - metadata:
+    - apiVersion: v1	
+      kind: PersistentVolumeClaim
+      metadata:
         name: server
       spec:
         accessModes: [ "ReadWriteOnce" ]

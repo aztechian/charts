@@ -95,7 +95,7 @@ spec:
             - name: {{ .name }}
               mountPath: {{ default (printf "/%s" .name) .mount }}
               readOnly: {{ default "false" .readOnly }}
-              {{- if .subpath }}
+              {{- if .subPath }}
               subPath: {{ .subPath }}
               {{- end }}
             {{- end }}

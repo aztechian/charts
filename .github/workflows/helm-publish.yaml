@@ -55,12 +55,9 @@ jobs:
           aws-region: us-east-2
 
       - name: Helm release
-        uses: shellbear/helm-release-action@v0.1
+        uses: shellbear/helm-release-action@main
         with:
           repo: s3://repos.imartin.io/charts
           chart: ${{ matrix.chart }}
           forceRelease: false
-      
-      - name: Fix relative paths in Helm Index
-        run: |
-          /usr/local/bin/helm s3 reindex repo --relative
+          relativeUrls: true
