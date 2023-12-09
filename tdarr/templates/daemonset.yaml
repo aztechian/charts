@@ -20,6 +20,10 @@ spec:
       {{- with .Values.node.affinity }}
       affinity: {{ toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: tdarr-node
           image: {{ .Values.node.image.repository }}:{{ .Values.node.image.tag | default .Chart.AppVersion }}
@@ -115,6 +119,6 @@ spec:
         {{- range .Values.extraClaims }}
         - name: {{ .name }}
           persistentVolumeClaim:
-            claimName: {{ print "%s-%s-0" .name (include "tdarr.fullname" .)}}
+            claimName: {{ printf "%s-%s-0" .name (include "tdarr.fullname" $) }}
         {{- end }}
 {{- end }}

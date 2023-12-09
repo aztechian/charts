@@ -5,7 +5,9 @@ image:
   tag: ""
 
 imagePullSecrets: []
+# -- override the name of the chart release
 nameOverride: ""
+# -- Force override the full name of the chart release
 fullnameOverride: ""
 
 server:
@@ -56,6 +58,7 @@ server:
       cpu: 100m
       memory: 256Mi
 
+# -- settings for controlling the Service object for Tdarr Server
 service:
   type: ClusterIP
   annotations: {}

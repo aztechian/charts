@@ -1,6 +1,6 @@
 # tdarr
 
-![Version: 1.0.4](https://img.shields.io/badge/Version-1.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.16.01](https://img.shields.io/badge/AppVersion-2.16.01-informational?style=flat-square)
+![Version: 1.0.5](https://img.shields.io/badge/Version-1.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.16.01](https://img.shields.io/badge/AppVersion-2.16.01-informational?style=flat-square)
 
 Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes cluster
 
@@ -16,7 +16,7 @@ Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes 
 |-----|------|---------|-------------|
 | extraClaims | list | `[]` | used for creating additional PVCs on the server template to mount on the server and all nodes Required fields for each element are: `name`. Optional fields  are `size`, `storageClass`, `selector`, `annotations`, `mount`, `subPath`, `readOnly` |
 | extraVolumes | list | `[]` | used for mounting additional volumes that already exist to the server and all nodes Required fields for each element are: `name`. Optional fields are: `mount`, `claimName`, `subPath`, `readOnly`  |
-| fullnameOverride | string | `""` |  |
+| fullnameOverride | string | `""` | Force override the full name of the chart release |
 | image.repository | string | `"ghcr.io/haveagitgat/tdarr"` |  |
 | image.tag | string | the value from Chart.appVersion | the image tag value |
 | imagePullSecrets | list | `[]` |  |
@@ -30,7 +30,7 @@ Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes 
 | library.readOnly | bool | `false` | Mount the library PVC as "readonly". Not applicable for an EmptyDir |
 | library.subPath | string | `""` | Mount a subpath of the PVC. (example: "downloads/complete") |
 | library.volume | object | `{"annotations":{},"selector":{},"size":"1Gi","storageClass":""}` | library volume creation information. `library.enabled` must be `true` for this to take effect. |
-| nameOverride | string | `""` |  |
+| nameOverride | string | `""` | override the name of the chart release |
 | node.affinity | object | `{}` |  |
 | node.ccextractorPath | string | `""` |  |
 | node.cronPluginUpdate | string | `""` |  |
@@ -67,15 +67,7 @@ Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes 
 | server.resources | object | `{"limits":{"cpu":"1000m","memory":"1Gi"},"requests":{"cpu":"100m","memory":"256Mi"}}` | Resource requests and limits for the Tdarr Server |
 | server.timezone | string | `"Europe/London"` | The timezone used by the server process. Will be used for all nodes as well. |
 | server.umask | string | `"002"` | A umask value for files that are created by Tdarr. |
-| service.annotations | object | `{}` |  |
-| service.clusterIP | string | `"None"` |  |
-| service.externalTrafficPolicy | string | `"Cluster"` |  |
-| service.labels | object | `{}` |  |
-| service.loadBalancerIP | string | `""` |  |
-| service.loadBalancerSourceRanges | list | `[]` |  |
-| service.serverPort | int | `8266` |  |
-| service.type | string | `"ClusterIP"` |  |
-| service.webPort | int | `8265` |  |
+| service | object | `{"annotations":{},"clusterIP":"None","externalTrafficPolicy":"Cluster","labels":{},"loadBalancerIP":"","loadBalancerSourceRanges":[],"serverPort":8266,"type":"ClusterIP","webPort":8265}` | settings for controlling the Service object for Tdarr Server |
 | serviceAccount | object | `{"annotations":{},"create":false,"labels":{},"name":""}` | Use a ServiceAccount to run the Tdarr Server with |
 | serviceAccount.create | bool | `false` | Turn on ServiceAccount creation and usage. |
 
