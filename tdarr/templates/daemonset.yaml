@@ -5,7 +5,7 @@ metadata:
   name: {{ include "tdarr.fullname" . }}-node
   labels: {{- include "tdarr.labels" . | nindent 4 }}
   annotations:
-    {{- with .Values.node.annotation }}
+    {{- with .Values.node.annotations }}
     {{ toYaml . | nindent 4 }}
     {{- end }}
     {{- if .Capabilities.APIVersions.Has "argoproj.io/v1alpha1/Application" }}
