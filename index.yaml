@@ -3,6 +3,20 @@ entries:
   tdarr:
   - apiVersion: v2
     appVersion: 2.16.01
+    created: "2023-12-09T05:12:41.946137609Z"
+    description: Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your
+      Kubernetes cluster
+    digest: bf8b3a9cba4f129854ed6f9d5d0877e35def4a15221f8250036763ec953bcf89
+    maintainers:
+    - email: ian@imartin.net
+      name: Ian Martin
+    name: tdarr
+    type: application
+    urls:
+    - https://github.com/aztechian/charts/releases/download/tdarr-1.0.9/tdarr-1.0.9.tgz
+    version: 1.0.9
+  - apiVersion: v2
+    appVersion: 2.16.01
     created: "2023-12-09T04:44:49.574358737Z"
     description: Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your
       Kubernetes cluster
@@ -125,4 +139,4 @@ entries:
     urls:
     - https://github.com/aztechian/charts/releases/download/tdarr-1.0.0/tdarr-1.0.0.tgz
     version: 1.0.0
-generated: "2023-12-09T04:44:49.574421233Z"
+generated: "2023-12-09T05:12:41.946192262Z"
