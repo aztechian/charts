@@ -40,6 +40,7 @@ server:
   nvidia: true
   # -- set environment variabels that tell Tdarr to use Intel GPU hardware for transcodes.
   intel: true
+  annotations: {}
   # -- Configure persistence for the Tdarr server. Note, this is the server configuration only
   # If you want additional persistence for libraries, outputs, etc see `library` and `extraVolumes`/`extraClaims`
   persistence:
@@ -120,6 +121,7 @@ node:
   # -- you likely don't want a resources definition on the nodes, that way it will use anything available, but will also
   # be the first to be evicted if there is a resource crunch. This is the `BestEffort` QoS class, and it is set for containers with undefined resources.
   resources: {}
+  annotations: {}
   port: 8268
   nodeSelector: {}
   tolerations: []

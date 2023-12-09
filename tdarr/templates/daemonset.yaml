@@ -3,6 +3,14 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: {{ include "tdarr.fullname" . }}-node
+  labels: {{- include "tdarr.labels" . | nindent 4 }}
+  annotations:
+    {{- with .Values.node.annotation }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+    {{- if .Capabilities.APIVersions.Has "argoproj.io/v1alpha1/Application" }}
+    argocd.argoproj.io/sync-wave: "5"
+    {{- end }}
 spec:
   selector:
     matchLabels: {{- include "tdarr.selectorLabels" . | nindent 6 }}

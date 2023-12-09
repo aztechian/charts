@@ -1,6 +1,6 @@
 # tdarr
 
-![Version: 1.0.6](https://img.shields.io/badge/Version-1.0.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.16.01](https://img.shields.io/badge/AppVersion-2.16.01-informational?style=flat-square)
+![Version: 1.0.7](https://img.shields.io/badge/Version-1.0.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.16.01](https://img.shields.io/badge/AppVersion-2.16.01-informational?style=flat-square)
 
 Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes cluster
 
@@ -32,6 +32,7 @@ Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes 
 | library.volume | object | `{"annotations":{},"selector":{},"size":"1Gi","storageClass":""}` | library volume creation information. `library.enabled` must be `true` for this to take effect. |
 | nameOverride | string | `""` | override the name of the chart release |
 | node.affinity | object | `{}` |  |
+| node.annotations | object | `{}` |  |
 | node.ccextractorPath | string | `""` |  |
 | node.cronPluginUpdate | string | `""` |  |
 | node.enabled | bool | `false` | Enable running Tdarr Nodes as a daemonset across the cluster. |
@@ -50,6 +51,7 @@ Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes 
 | node.resources | object | `{}` | you likely don't want a resources definition on the nodes, that way it will use anything available, but will also be the first to be evicted if there is a resource crunch. This is the `BestEffort` QoS class, and it is set for containers with undefined resources. |
 | node.tolerations | list | `[]` |  |
 | node.umask | string | reuse the PUID given to the server process (default `002`) | the umask to use for running Tdarr on the node. |
+| server.annotations | object | `{}` |  |
 | server.apiKey | string | `""` | If using Tdarr Pro, your API Key. |
 | server.ccextractorPath | string | `""` |  |
 | server.cronPluginUpdate | string | `""` |  |
