@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: v2
 name: emby
 description: A Helm chart for Emby Media Server. Run as a StatefulSet on kubernetes, so that volume management is safely done.
 
