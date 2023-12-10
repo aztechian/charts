@@ -1,0 +1,136 @@
+# Default values for emby.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  # image.registry -- Container image registry
+  registry: docker.io
+  # image.repository -- Location of the container image
+  repository: emby/embyserver
+  # image.tag -- Container image tag
+  tag:
+  # image.pullPolicy -- Container image pull policy
+  pullPolicy: IfNotPresent
+
+# imagePullSecrets -- List of image pull secrets if you use a privately hosted image
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # serviceAccount.create -- Specifies whether a service account should be created
+  create: false
+  # serviceAccount.annotations -- Annotations to add to the service account
+  annotations: {}
+  # serviceAccount.name -- The name of the service account to use.
+  # If not set and `create` is `true`, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+securityContext:
+  {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  # service.type -- Service type
+  type: ClusterIP
+  # service.annotation -- Additional annotations for the Service object
+  annotations: {}
+  # service.httpPort -- Service http port number
+  port: 8096
+
+persistence:
+  # persistence.enabled -- Whether to enable a PVC for emby configuration data. This is mounted to `/config` in the container.
+  enabled: false
+  # persistence.size -- Requested storage size
+  size: 3Gi
+  # persistence.selector -- PV selector
+  selector: {}
+  # persistence.storageClass -- Storage Class name of the PV
+  storageClass: ""
+  # persistence.annotations -- Additional annotations to add to the PVC
+  annotations: {}
+  # additionalVolumes -- Add custom volumes to the deployment. See details in [values.yaml](values.yaml) for details on object definition.
+  additionalVolumes: []
+  #   - name:
+  #     annotations:
+  #     mount:
+  #     readOnly:
+  #     size:
+  #     storageClass:
+  #     selector:
+  #       matchLabels:
+  #         key: value
+
+livenessProbe:
+  # livenessProbe.enabled -- Whether to enable the liveness probe
+  enabled: true
+readinessProbe:
+  # readinessProbe.enabled -- Whether to enable the readiness probe
+  enabled: true
+
+ingress:
+  # ingress.enabled -- Control whether ingress is created
+  enabled: false
+  # ingress.className - the IngressClass to use for serviceing this ingress
+  className:
+  # ingress.annotations -- Additional annotations for the Ingress object
+  annotations:
+    {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  # -- hostname to use as FQDN for ingress creation
+  hostname:
+  # -- path mapping for ingress
+  path: /
+  pathType: ImplementationSpecific
+  # -- additional host entries to create for Ingress mapping
+  extraHosts: []
+  # - host: emby.cluster.local
+  #   paths:
+  #     - path: /
+  # ingress.tls -- See Kubernetes Docs for a guide to setup TLS on Ingress
+  tls: []
+  #  - secretName: emby-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 30m
+    memory: 512Mi
+
+# timezone -- Sets the timezone that the Emby application should use
+timezone:
+
+# uid -- Set the User ID (UID) that Emby server should run as
+uid:
+
+# gid -- Set the primary Group ID (GID) that Emby server should run as
+gid:
+
+# gidlist -- Set the list (comma separated), of additional GIDs Emby server should run as
+gidlist:
+
+deploymentStrategy: Recreate
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
