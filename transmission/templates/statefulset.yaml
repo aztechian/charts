@@ -1,0 +1,199 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "transmission.fullname" . }}
+  labels:
+    {{- include "transmission.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "transmission.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "transmission.fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "transmission.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "transmission.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.theme.url }}
+      initContainers:
+        - name: theme-downloader
+          image: docker.io/curlimages/curl:7.88.1
+          securityContext:
+            runAsUser: {{ include "transmission.effectiveUID" . }}
+            runAsGroup: {{ include "transmission.effectiveGID" . }}
+          command:
+            - sh
+            - "-c"
+          args: 
+           - |
+              cd /config
+              rm -rf {{.Values.theme.name | quote}} || true
+              curl -sL {{.Values.theme.url | quote}} | tar xzvf -
+          volumeMounts:
+            - mountPath: /config
+              name: data
+              subPath: config
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            {{- if .Values.uid }}
+            - name: PUID
+              value: {{ .Values.uid | quote }}
+            {{- end }}
+            {{- if .Values.gid }}
+            - name: PGID
+              value: {{ .Values.gid | quote }}
+            {{- end }}
+            {{- if .Values.theme.name }}
+            - name: TRANSMISSION_WEB_HOME
+              value: {{ printf "/config/%s" .Values.theme.name | quote }}
+            {{- end }}
+            {{- if or .Values.auth.username .Values.auth.password }}
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "transmission.fullname" . }}
+                  key: username
+            - name: PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "transmission.fullname" . }}
+                  key: password
+            {{- end }}
+            {{- if .Values.timezone }}
+            - name: TZ
+              value: {{ .Values.timezone | quote }}
+            {{- end }}
+            {{- if .Values.peerPort }}
+            - name: PEERPORT
+              value: {{ .Values.peerPort | quote }}
+            {{- end }}
+          ports:
+            - name: web
+              containerPort: 9091
+              protocol: TCP
+            - name: peer-tcp
+              containerPort: {{ .Values.peerPort }}
+              protocol: TCP
+            - name: peer-udp
+              containerPort: {{ .Values.peerPort }}
+              protocol: UDP
+          volumeMounts:
+            - mountPath: /downloads
+              name: data
+              subPath: downloads
+            - mountPath: /config
+              name: data
+              subPath: config
+            - mountPath: /watch
+              name: data
+              subPath: watch
+          livenessProbe:
+            tcpSocket:
+              port: 9091
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 9091
+            initialDelaySeconds: 5
+            periodSeconds: 2
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        {{- if .Values.vpn.conf }}
+        - name: openvpn
+          args:
+            - -d
+            {{- if .Values.vpn.localCIDR }}
+            - -r
+            - {{ .Values.vpn.localCIDR | quote }}
+            {{- end }}
+          image: "{{ .Values.vpn.image.repository }}:{{ .Values.vpn.image.tag | default "latest" }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500M
+            requests:
+              cpu: 100m
+              memory: 100M
+          livenessProbe:
+            exec:
+              command:
+              - ping
+              - -c
+              - "1"
+              - airvpn.org
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            timeoutSeconds: 12
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+              - SYS_MODULE
+            privileged: true
+          volumeMounts:
+            - mountPath: /vpn
+              name: openvpn
+        {{- end }}
+      volumes:
+        {{- if .Values.vpn.conf }}
+        - secret:
+            secretName: {{ include "transmission.fullname" . }}-vpn
+          name: openvpn
+        {{- end }}
+        {{- if not .Values.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+        {{- end }}
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        {{- with .Values.persistence.annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      spec:
+        accessModes: [ "ReadWriteOnce", "ReadWriteMany" ]
+        {{- if .Values.persistence.storageClass }}
+        {{- if (eq "-" .Values.persistence.storageClass) }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: "{{ .Values.persistence.storageClass }}"
+        {{- end }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size | quote }}
+  {{- end }}
