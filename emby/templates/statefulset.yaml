@@ -1,0 +1,151 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "emby.fullname" . }}
+  labels:
+    {{- include "emby.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "emby.fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "emby.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "emby.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "emby.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8096
+            - name: https
+              containerPort: 8920
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 3
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 2
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 2
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            {{- range .Values.persistence.additionalVolumes }}
+            - mountPath: {{ default (printf "/%s" .name) .mount }}
+              name: {{ .name }}
+              readOnly: {{ default "false" .readOnly }}
+            {{- end }}
+          {{- if or .Values.timezone .Values.uid .Values.gid .Values.gidlist }}
+          env:
+            {{- if .Values.timezone }}
+            - name: TZ
+              value: {{ .Values.timezone }}
+            {{- end }}
+            {{- if .Values.uid }}
+            - name: UID
+              value: {{ .Values.uid | quote }}
+            {{- end }}
+            {{- if .Values.gid }}
+            - name: GID
+              value: {{ .Values.gid | quote }}
+            {{- end }}
+            {{- if .Values.gidlist }}
+            - name: GIDLIST
+              value: {{ .Values.gidlist | quote }}
+            {{- end }}
+          {{- end }}
+      {{- if not .Values.persistence.enabled }}
+      volumes:
+        - name: config
+          emptyDir: {}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - apiVersion: v1	
+      kind: PersistentVolumeClaim
+      metadata:
+        name: config
+        {{- with .Values.persistence.annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        {{- if hasKey .Values.persistence "storageClass" }}
+        storageClassName: {{ .Values.persistence.storageClass | quote }}
+        {{- end }}
+        {{- if .Values.persistence.selector }}
+        selector:
+          {{ toYaml .Values.persistence.selector | nindent 12 }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
+    {{- range .Values.persistence.additionalVolumes }}
+    - apiVersion: v1	
+      kind: PersistentVolumeClaim
+      metadata:
+        name: {{ .name }}
+        {{- with .annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      spec:
+        accessModes: ["ReadWriteMany", "ReadWriteOnce", "ReadOnlyMany"]
+        {{- if .storageClass }}
+        storageClassName: {{ .storageClass }}
+        {{- end }}
+        {{- if .selector }}
+        selector:
+          {{ toYaml . | nindent 12 }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .size | default "1Gi" }}
+    {{ end -}}
+  {{- end }}
