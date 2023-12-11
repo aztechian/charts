@@ -1,0 +1,48 @@
+# Default values for webserver.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: ""
+
+persistentVolume:
+  size: 1Gi
+  accessMode: ReadOnlyMany
+  storageClass: ""
+
+nginx:
+  staticSitePVC:
+  service:
+    type: ClusterIP
+    externalTrafficPolicy: Local
+  serverBlock: |-
+    autoindex on;
+    autoindex_format html;
+    set_real_ip_from 10.0.0.0/8;
+    real_ip_header X-Forwarded-For;
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPU: 90
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 32Mi
+  metrics:
+    enabled: false
+    serviceMonitor:
+      enabled: true
+      selector:
+        release: prometheus
+      namespace: metrics
+    resources:
+      limits:
+        cpu: 50m
+        memory: 64Mi
+      requests:
+        cpu: 10m
+        memory: 16Mi

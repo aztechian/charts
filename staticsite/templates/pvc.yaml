@@ -1,0 +1,17 @@
+{{- if .Values.nginx.staticSitePVC -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Values.nginx.staticSitePVC }}
+  labels:
+    {{- include "webserver.labels" . | nindent 4 }}
+spec:
+  {{- if .Values.persistentVolume.storageClass }}
+  storageClassName: {{ .Values.persistentVolume.storageClass }}
+  {{- end }}
+  accessModes:
+    - {{ .Values.persistentVolume.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.persistentVolume.size }}
+{{- end -}}
