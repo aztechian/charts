@@ -159,4 +159,22 @@ entries:
     urls:
     - https://github.com/aztechian/charts/releases/download/tdarr-1.0.0/tdarr-1.0.0.tgz
     version: 1.0.0
-generated: "2023-12-10T21:07:25.357075869Z"
+  transmission:
+  - apiVersion: v2
+    appVersion: 4.0.3
+    created: "2023-12-11T05:05:32.696613755Z"
+    description: A Helm chart for Kubernetes
+    digest: 66660a73adfe58fe76b94d64cab7263529203c9ac4f8045e603c99edaa9a2ad4
+    icon: https://transmissionbt.com/images/gearshift.png
+    maintainers:
+    - email: ian@imartin.net
+      name: Ian Martin
+    name: transmission
+    sources:
+    - https://github.com/dperson/openvpn-client/
+    - https://github.com/transmission/transmission
+    type: application
+    urls:
+    - https://github.com/aztechian/charts/releases/download/transmission-1.2.1/transmission-1.2.1.tgz
+    version: 1.2.1
+generated: "2023-12-11T05:05:32.69664309Z"
