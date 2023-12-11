@@ -1,0 +1,126 @@
+# Default values for transmission.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: linuxserver/transmission
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+securityContext:
+  {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+  annotations: {}
+
+ingress:
+  enabled: false
+  className: ""
+  annotations:
+    {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hostname:
+  path: /
+  pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+  extraPaths: []
+  extraHosts: []
+
+resources:
+  {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# timezone -- The timezone identifier for Transmission to use (ie, America/Denver)
+timezone: UTC
+
+# peerPort -- The Port (both TCP and UDP) to use for Transmission peer communication. This should be changed if you modify the Transmission config file to use a different `peer-port` setting.
+peerPort: 51413
+
+# theme -- The Transmission theme to use. Valid options are: `combustion-release`, `transmission-web-control`, and `kettu`
+theme: 
+  name:
+  url:
+# other alternatives
+# theme: combustion-release
+# theme: transmission-web-control
+# theme: kettu
+
+persistence:
+  # persistence.enabled -- When true, creates a PersistentVolumeClaim to attach to a Persistent Volume. The PV should already exist, and can be found by label/size or storageClass.
+  enabled: false
+  # persistence.size -- The size of the PV to match this claim with.
+  size: 1Gi
+  # persistence.storageClass -- The storage class where the desired PV can be located. Leave blank for the cluster "default" storage class.
+  storageClass:
+  annotations: {}
+
+auth:
+  # auth.password -- The HTTP Basic password to require for accessing the Transmission web console. DO NOT SAVE this password in plaintext in your version control.
+  password:
+  # auth.username -- The HTTP Basic username for accessing the Transmission web console.
+  username:
+
+# uid -- The UID (User ID) that transmission should run as
+uid:
+# gid -- The primary GID (Group ID) that transmission should run as
+gid:
+
+vpn:
+  image:
+    # vpn.image.repository -- The image to use for the VPN connection
+    repository: dperson/openvpn-client
+    # vpn.image.tag -- The image tag for the VPN connection
+    tag: latest
+  # vpn.conf -- The full OpenVPN configuration for the VPN container to use. A Secret resource will be created with this content. DO NOT SAVE this text unencrypted in your version control.
+  conf:
+  # vpn.localCIDR -- Use this to create a route in the OpenVPN container to your local network. Maps to the `-r` option of the dperson/openvpn-client docker image.
+  localCIDR:
