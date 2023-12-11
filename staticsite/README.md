@@ -22,7 +22,7 @@ A static webserver. Uses nginx with a PersistentVolume for serving content.
 |-----|------|---------|-------------|
 | fullnameOverride | string | `""` |  |
 | nameOverride | string | `""` |  |
-| nginx.autoscaling.enabled | bool | `true` |  |
+| nginx.autoscaling.enabled | bool | `false` |  |
 | nginx.autoscaling.maxReplicas | int | `3` |  |
 | nginx.autoscaling.minReplicas | int | `1` |  |
 | nginx.autoscaling.targetCPU | int | `90` |  |
@@ -38,8 +38,8 @@ A static webserver. Uses nginx with a PersistentVolume for serving content.
 | nginx.resources.limits.memory | string | `"256Mi"` |  |
 | nginx.resources.requests.cpu | string | `"10m"` |  |
 | nginx.resources.requests.memory | string | `"32Mi"` |  |
-| nginx.serverBlock | string | `"autoindex on;\nautoindex_format html;\nset_real_ip_from 10.0.0.0/8;\nreal_ip_header X-Forwarded-For;"` |  |
-| nginx.service.externalTrafficPolicy | string | `"Local"` |  |
+| nginx.serverBlock | string | `""` |  |
+| nginx.service.externalTrafficPolicy | string | `""` |  |
 | nginx.service.type | string | `"ClusterIP"` |  |
 | nginx.staticSitePVC | string | `nil` |  |
 | persistentVolume.accessMode | string | `"ReadOnlyMany"` |  |
