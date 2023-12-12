@@ -1,0 +1,72 @@
+{{- if .Capabilities.APIVersions.Has "batch/v1" -}}
+apiVersion: batch/v1
+{{- else }}
+apiVersion: batch/v1beta1
+{{- end }}
+kind: CronJob
+metadata:
+  name: {{ include "cloudsync.fullname" . }}
+  labels:
+    {{- include "cloudsync.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.schedule }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: {{ .Values.runLimitSeconds }}
+      backoffLimit: {{ .Values.backoffLimit }}
+      template:
+        metadata:
+          {{- with .Values.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          labels:
+            {{- include "cloudsync.selectorLabels" . | nindent 12 }}
+        spec:
+          serviceAccountName: {{ include "cloudsync.serviceAccountName" . }}
+          containers:
+            - name: {{ .Chart.Name }}
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: IfNotPresent
+              volumeMounts:
+                - name: config
+                  mountPath: /config/rclone
+              args:
+                - sync
+                {{- if .Values.verbose }}
+                - -v
+                {{- end }}
+                {{- if .Values.dryRun }}
+                - --dry-run
+                {{- end }}
+                - --update
+                - --fast-list
+                - --checksum
+                - --transfers
+                - {{ .Values.transfers | quote }}
+                - --checkers
+                - {{ .Values.checkers | quote }}
+                - "{{ .Values.source.name }}:{{ .Values.source.bucket }}"
+                - "{{ .Values.destination.name }}:{{ .Values.destination.bucket }}"
+              resources:
+                {{- toYaml .Values.resources | nindent 16 }}
+              securityContext:
+                {{- toYaml .Values.securityContext | nindent 16 }}
+          restartPolicy: {{ .Values.restartPolicy }}
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumes:
+            - name: config
+              secret:
+                secretName: {{ template "cloudsync.secretName" . }}

@@ -1,0 +1,5 @@
+Arq sync has been installed with to sync {{ .Values.source.bucket }} to {{ .Values.destination.bucket }}
+Sync will run with the following schedule:
+
+ * {{ .Values.schedule }}
+ 
