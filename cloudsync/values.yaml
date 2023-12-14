@@ -1,0 +1,94 @@
+# Default values for arq-sync.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: rclone/rclone
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 64Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+existingSecret: ""
+
+schedule: "0 0 */3 * *"
+
+transfers: 20
+
+checkers: 5
+
+verbose: true
+
+runLimitSeconds: 10800
+
+restartPolicy: OnFailure
+
+backoffLimit: 2
+
+dryRun: false
+
+prometheusRule: false
+
+source:
+  name: source
+  type: s3
+  bucket:
+  provider: AWS
+  access_key_id:
+  secret_access_key:
+  region: us-east-1
+  endpoint:
+  server_side_encryption:
+  storage_class:
+
+destination:
+  name: destination
+  type: s3
+  bucket:
+  provider: AWS
+  access_key_id:
+  secret_access_key:
+  region: us-east-1
+  endpoint:
+  server_side_encryption:
+  storage_class:

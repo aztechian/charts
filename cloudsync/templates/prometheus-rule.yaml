@@ -1,0 +1,21 @@
+{{- if .Values.prometheusRule }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "cloudsync.fullname" . }}
+  labels:
+    release: prometheus
+spec:
+  groups:
+    - name: {{ include "cloudsync.fullname" . }}
+      rules:
+        - alert: ArqSyncJobNotRun
+          expr: |
+            round(
+              time() - max by (namespace, owner_name) (
+                kube_job_status_start_time *
+                on (job_name) group_left(owner_name)
+                max by (namespace, owner_name, job_name) (kube_job_owner{owner_kind="CronJob"})
+              )
+            ) > 432000
+{{- end }}
