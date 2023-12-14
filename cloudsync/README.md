@@ -2,7 +2,16 @@
 
 ![Version: 1.3.3](https://img.shields.io/badge/Version-1.3.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.62.2](https://img.shields.io/badge/AppVersion-1.62.2-informational?style=flat-square)
 
-Helm Chart for periodically synchronizing cloud storage
+Helm Chart for periodically synchronizing cloud storage.
+
+This chart is not related to the CloudSync application from a popular NAS hardware maker.
+
+I had a need to mirror my data from on-premise S3 storage into AWS S3 for
+offsite backup. This chart creates a Kubernetes CronJob that uses the fantasitc
+[RClone](https://rclone.org) tool as the pod image, and creates and mounts an rclone.conf
+configuration onto that Pod. At the moment it is specific for s3 sources and destinations,
+but I'm open to making it support more/general rclone config - please ask for it in a
+GitHub issue - if this would help you.
 
 **Homepage:** <https://rclone.org/>
 

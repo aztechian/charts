@@ -1,15 +1,17 @@
 apiVersion: v2
 name: cloudsync
-description: Helm Chart for periodically synchronizing cloud storage
+description: |-
+  Helm Chart for periodically synchronizing cloud storage.
 
-# A chart can be either an 'application' or a 'library' chart.
-#
-# Application charts are a collection of templates that can be packaged into versioned archives
-# to be deployed.
-#
-# Library charts provide useful utilities or functions for the chart developer. They're included as
-# a dependency of application charts to inject those utilities and functions into the rendering
-# pipeline. Library charts do not define any templates and therefore cannot be deployed.
+  This chart is not related to the CloudSync application from a popular NAS hardware maker. 
+
+  I had a need to mirror my data from on-premise S3 storage into AWS S3 for 
+  offsite backup. This chart creates a Kubernetes CronJob that uses the fantasitc
+  [RClone](https://rclone.org) tool as the pod image, and creates and mounts an rclone.conf
+  configuration onto that Pod. At the moment it is specific for s3 sources and destinations,
+  but I'm open to making it support more/general rclone config - please ask for it in a 
+  GitHub issue - if this would help you.
+
 type: application
 
 # This is the chart version. This version number should be incremented each time you make changes
