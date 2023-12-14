@@ -203,4 +203,20 @@ entries:
     urls:
     - https://github.com/aztechian/charts/releases/download/transmission-1.2.1/transmission-1.2.1.tgz
     version: 1.2.1
-generated: "2023-12-11T15:51:42.632571978Z"
+  youtubedl-material:
+  - apiVersion: v2
+    appVersion: 4.3.2
+    created: "2023-12-14T03:27:36.865645085Z"
+    description: 'A Helm chart for https://github.com/Tzahi12345/YoutubeDL-Material  ##
+      Note:  > This Chart is a re-hosting of the official YoutubeDL-Material repository
+      Since the [YoutubeDL-Material](https://github.com/Tzahi12345/YoutubeDL-Material)
+      doesn''t have a way to directly use their helm chart (ie, its not in a helm
+      repository), this version is an unmodified copy of that chart but ends up being
+      published to https://repos.imartin.io/charts for ease-of-use.'
+    digest: 2ccd7dc644a3c7b71843b8a35c50b7a348b2e60e2aaee5a0ec581206241f0e24
+    name: youtubedl-material
+    type: application
+    urls:
+    - https://github.com/aztechian/charts/releases/download/youtubedl-material-0.2.0/youtubedl-material-0.2.0.tgz
+    version: 0.2.0
+generated: "2023-12-14T03:27:36.865684481Z"
