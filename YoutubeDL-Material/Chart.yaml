@@ -1,15 +1,15 @@
 apiVersion: v2
 name: youtubedl-material
-description: A Helm chart for https://github.com/Tzahi12345/YoutubeDL-Material
+description: |-
+  A Helm chart for https://github.com/Tzahi12345/YoutubeDL-Material
+  
+  ## Note:
 
-# A chart can be either an 'application' or a 'library' chart.
-#
-# Application charts are a collection of templates that can be packaged into versioned archives
-# to be deployed.
-#
-# Library charts provide useful utilities or functions for the chart developer. They're included as
-# a dependency of application charts to inject those utilities and functions into the rendering
-# pipeline. Library charts do not define any templates and therefore cannot be deployed.
+  > This Chart is a re-hosting of the official YoutubeDL-Material repository
+  Since the [YoutubeDL-Material](https://github.com/Tzahi12345/YoutubeDL-Material) doesn't have a way to directly
+  use their helm chart (ie, its not in a helm repository), this version is an unmodified copy of that chart
+  but ends up being published to https://repos.imartin.io/charts for ease-of-use.
+
 type: application
 
 # This is the chart version. This version number should be incremented each time you make changes
