@@ -1,5 +1,33 @@
 apiVersion: v1
 entries:
+  cloudsync:
+  - apiVersion: v2
+    appVersion: 1.62.2
+    created: "2023-12-14T03:29:54.030459233Z"
+    description: Helm Chart for periodically synchronizing cloud storage.  This chart
+      is not related to the CloudSync application from a popular NAS hardware maker.   I
+      had a need to mirror my data from on-premise S3 storage into AWS S3 for  offsite
+      backup. This chart creates a Kubernetes CronJob that uses the fantasitc [RClone](https://rclone.org)
+      tool as the pod image, and creates and mounts an rclone.conf configuration onto
+      that Pod. At the moment it is specific for s3 sources and destinations, but
+      I'm open to making it support more/general rclone config - please ask for it
+      in a  GitHub issue - if this would help you.
+    digest: 7c6dafe5793076be89ce56133e88f14ed461d2d58df84d60a2b170a637a075d9
+    home: https://rclone.org/
+    icon: https://rclone.org/img/logo_on_light__horizontal_color.svg
+    keywords:
+    - rclone
+    - s3
+    - arq
+    - backup
+    maintainers:
+    - email: ian@imartin.net
+      name: Ian Martin
+    name: cloudsync
+    type: application
+    urls:
+    - https://github.com/aztechian/charts/releases/download/cloudsync-1.3.3/cloudsync-1.3.3.tgz
+    version: 1.3.3
   emby:
   - apiVersion: v2
     appVersion: 4.7.14.0
@@ -219,4 +247,4 @@ entries:
     urls:
     - https://github.com/aztechian/charts/releases/download/youtubedl-material-0.2.0/youtubedl-material-0.2.0.tgz
     version: 0.2.0
-generated: "2023-12-14T03:27:36.865684481Z"
+generated: "2023-12-14T03:29:54.030488127Z"
