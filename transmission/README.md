@@ -1,8 +1,9 @@
 # transmission
 
-![Version: 1.2.1](https://img.shields.io/badge/Version-1.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.0.3](https://img.shields.io/badge/AppVersion-4.0.3-informational?style=flat-square)
+![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.0.5](https://img.shields.io/badge/AppVersion-4.0.5-informational?style=flat-square)
 
-A Helm chart for Kubernetes
+This chart creates a deployment of Transmission, a BitTorrent client. Additionally, it creates a VPN connection to tunnel bittorrent traffic through.
+The Transmission UI is still accessible via a Service and/or Ingress in the cluster, but all torrent traffic is sent through the VPN interface.
 
 ## Maintainers
 
@@ -14,6 +15,7 @@ A Helm chart for Kubernetes
 
 * <https://github.com/dperson/openvpn-client/>
 * <https://github.com/transmission/transmission>
+* <https://hub.docker.com/r/linuxserver/transmission>
 
 ## Values
 
