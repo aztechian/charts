@@ -82,3 +82,39 @@ Determine the effective group ID of the container
 {{- printf "%d" 911 }}
 {{- end }}
 {{- end }}
+
+{{/*
+Common bits of VPN container configuration
+*/}}
+{{- define "transmission.vpn.common" -}}
+securityContext:
+  privileged: true
+  capabilities:
+    add:
+      - NET_ADMIN
+      - SYS_MODULE
+resources:
+  limits:
+    cpu: 500m
+    memory: 500M
+  requests:
+    cpu: 100m
+    memory: 100M
+{{- end }}
+
+{{/*
+VPN container liveness probe. Takes device name as parameter
+*/}}
+{{- define "transmission.vpn.livenessprobe" -}}
+livenessProbe:
+  exec:
+    command:
+      - ip
+      - -br
+      - a
+      - show
+      - {{ . | default "tun0" }}
+  initialDelaySeconds: 15
+  periodSeconds: 30
+  timeoutSeconds: 5
+{{- end }}
