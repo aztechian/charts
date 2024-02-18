@@ -117,60 +117,27 @@ spec:
             - mountPath: /watch
               name: data
               subPath: watch
-          livenessProbe:
-            tcpSocket:
-              port: 9091
-            initialDelaySeconds: 10
-            periodSeconds: 10
           readinessProbe:
             tcpSocket:
-              port: 9091
-            initialDelaySeconds: 5
-            periodSeconds: 2
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-        {{- if .Values.vpn.conf }}
-        - name: openvpn
-          args:
-            - -d
-            {{- if .Values.vpn.localCIDR }}
-            - -r
-            - {{ .Values.vpn.localCIDR | quote }}
-            {{- end }}
-          image: "{{ .Values.vpn.image.repository }}:{{ .Values.vpn.image.tag | default "latest" }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          resources:
-            limits:
-              cpu: 500m
-              memory: 500M
-            requests:
-              cpu: 100m
-              memory: 100M
-          livenessProbe:
-            exec:
-              command:
-              - ping
-              - -c
-              - "1"
-              - airvpn.org
+              port: web
             initialDelaySeconds: 15
             periodSeconds: 30
-            timeoutSeconds: 12
-          securityContext:
-            capabilities:
-              add:
-              - NET_ADMIN
-              - SYS_MODULE
-            privileged: true
-          volumeMounts:
-            - mountPath: /vpn
-              name: openvpn
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        {{- if and .Values.vpn.conf (eq .Values.vpn.type "openvpn") }}
+        {{- include "transmission.openvpn.container" . | indent 8 }}
+        {{- end }}
+        {{- if and .Values.vpn.conf (eq .Values.vpn.type "wireguard") }}
+        {{- include "transmission.wireguard.container" . | nindent 8 }}
+        {{- if .Values.vpn.metrics.enabled }}
+        {{- include "transmission.wireguard.metrics" . | nindent 8 }}
+        {{- end }}
         {{- end }}
       volumes:
         {{- if .Values.vpn.conf }}
         - secret:
             secretName: {{ include "transmission.fullname" . }}-vpn
-          name: openvpn
+          name: vpnconf
         {{- end }}
         {{- if not .Values.persistence.enabled }}
         - name: data

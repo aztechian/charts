@@ -1,0 +1,17 @@
+{{- if and .Values.vpn.conf (eq .Values.vpn.type "wireguard") .Values.vpn.metrics.enabled .Values.vpn.metrics.serviceMonitor }}
+{{- if .Capabilities.APIVersions.Has "monitoring.coreos.com/v1" }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "transmission.fullname" . }}-vpn
+  labels:
+    {{- include "transmission.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "transmission.selectorLabels" . | nindent 6 }}
+  endpoints:
+    - port: vpn-metrics
+      interval: 30s
+{{- end }}
+{{- end }}

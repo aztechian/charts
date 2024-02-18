@@ -115,12 +115,26 @@ uid:
 gid:
 
 vpn:
+  # vpn.type -- The type of VPN to use. Valid options are: `openvpn` and `wireguard`
+  type: wireguard
+  # vpn.connectionName -- The name to use for the VPN connection. Default is "vpn".
+  connectionName: 
   image:
-    # vpn.image.repository -- The image to use for the VPN connection
-    repository: dperson/openvpn-client
-    # vpn.image.tag -- The image tag for the VPN connection
-    tag: latest
-  # vpn.conf -- The full OpenVPN configuration for the VPN container to use. A Secret resource will be created with this content. DO NOT SAVE this text unencrypted in your version control.
+    pullPolicy: IfNotPresent
+    wireguard:
+      # vpn.image.wireguard.repository -- The image to use for the VPN connection
+      repository: linuxserver/wireguard
+      # vpn.image.wireguard.tag -- The image tag for the VPN connection
+      tag: latest
+    openvpn:
+      # vpn.image.openvpn.repository -- The image to use for the VPN connection
+      repository: dperson/openvpn-client
+      # vpn.image.openvpn.tag -- The image tag for the VPN connection
+      tag: latest
+  # vpn.conf -- The full OpenVPN or Wireguard configuration for the VPN container to use. A Secret resource will be created with this content. DO NOT SAVE this text unencrypted in your version control.
   conf:
-  # vpn.localCIDR -- Use this to create a route in the OpenVPN container to your local network. Maps to the `-r` option of the dperson/openvpn-client docker image.
+  # vpn.localCIDR -- Use this to create a route in the OpenVPN container to your local network. Maps to the `-r` option of the dperson/openvpn-client docker image. Not used for Wireguard.
   localCIDR:
+  metrics:
+    enabled: false
+    serviceMonitor: true

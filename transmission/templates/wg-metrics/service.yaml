@@ -1,0 +1,16 @@
+{{- if and .Values.vpn.conf (eq .Values.vpn.type "wireguard") .Values.vpn.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "transmission.fullname" . }}-vpn-metrics
+  labels:
+    {{- include "transmission.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "transmission.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: vpn-metrics
+      protocol: TCP
+      port: 9586
+      targetPort: 9586
+{{- end }}
