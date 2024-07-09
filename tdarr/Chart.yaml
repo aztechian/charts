@@ -2,8 +2,8 @@ apiVersion: v2
 name: tdarr
 type: application
 description: Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes cluster
-appVersion: 2.17.01
-version: 1.0.10
+appVersion: 2.20.01
+version: 1.0.11
 maintainers:
   - name: Ian Martin
     email: ian@imartin.net
