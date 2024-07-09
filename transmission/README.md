@@ -1,6 +1,6 @@
 # transmission
 
-![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.0.5](https://img.shields.io/badge/AppVersion-4.0.5-informational?style=flat-square)
+![Version: 2.0.1](https://img.shields.io/badge/Version-2.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.0.6](https://img.shields.io/badge/AppVersion-4.0.6-informational?style=flat-square)
 
 This chart creates a deployment of Transmission, a BitTorrent client. Additionally, it creates a VPN connection to tunnel bittorrent traffic through.
 The Transmission UI is still accessible via a Service and/or Ingress in the cluster, but all torrent traffic is sent through the VPN interface.
@@ -55,7 +55,7 @@ The Transmission UI is still accessible via a Service and/or Ingress in the clus
 | service.port | int | `80` |  |
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` |  |
-| serviceAccount.create | bool | `true` |  |
+| serviceAccount.create | bool | `false` |  |
 | serviceAccount.name | string | `""` |  |
 | theme | object | `{"name":null,"url":null}` | The Transmission theme to use. Valid options are: `combustion-release`, `transmission-web-control`, and `kettu` |
 | timezone | string | `"UTC"` | The timezone identifier for Transmission to use (ie, America/Denver) |

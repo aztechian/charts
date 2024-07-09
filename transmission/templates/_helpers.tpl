@@ -113,8 +113,23 @@ livenessProbe:
       - -br
       - a
       - show
-      - {{ . | default "tun0" }}
+      - {{ include "transmission.vpn.connectionName" . }}
   initialDelaySeconds: 15
   periodSeconds: 30
   timeoutSeconds: 5
 {{- end }}
+
+{{/* 
+Connection name string. Uses the value if it has been provided by the user, otherwise determined from the VPN type.
+wireguard is "wg0"
+and openvpn is "tun0"
+*/}}
+{{- define "transmission.vpn.connectionName" -}}
+{{- if .Values.vpn.connectionName }}
+{{ .Values.vpn.connectionName }}
+{{- else if (eq .Values.vpn.type "openvpn") }}
+{{- print "tun0" }}
+{{- else }}
+{{- print "wg0" }}
+{{- end }}
+{{- end -}}
