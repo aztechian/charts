@@ -86,6 +86,20 @@ entries:
     urls:
     - https://github.com/aztechian/charts/releases/download/emby-1.0.4/emby-1.0.4.tgz
     version: 1.0.4
+  samba:
+  - apiVersion: v2
+    appVersion: "4.19"
+    created: "2024-11-14T17:44:03.851966831Z"
+    description: A Helm chart for deploying ServerContainer's samba into Kubernetes.  See
+      https://github.com/ServerContainers/samba for more information about the image
+      and details on the configuration options.
+    digest: cab8c02d923c00d0e1a8d86770f45b3eb92a8728c535d88ff5bbe46f167bdada
+    icon: https://avatars.githubusercontent.com/u/20579574?s=48&v=4
+    name: samba
+    type: application
+    urls:
+    - https://github.com/aztechian/charts/releases/download/samba-1.0.0/samba-1.0.0.tgz
+    version: 1.0.0
   staticsite:
   - apiVersion: v2
     appVersion: 1.25.4
@@ -387,4 +401,4 @@ entries:
     urls:
     - https://github.com/aztechian/charts/releases/download/youtubedl-material-0.2.0/youtubedl-material-0.2.0.tgz
     version: 0.2.0
-generated: "2024-07-09T03:17:45.948132195Z"
+generated: "2024-11-14T17:44:03.85203556Z"
