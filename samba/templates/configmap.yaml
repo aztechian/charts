@@ -6,10 +6,12 @@ metadata:
   labels: 
     {{- include "samba.labels" . | nindent 4 }}
 data:
-  {{/*
-    This file only contains the smb.conf content, see the secret for user information, and the deployment ENV vars for other configuration 
-  */}}
-  SAMBA_GLOBAL_STANZA: {{ .Values.config.globalStanza }}
+  {{/* This file only contains the smb.conf content, see the secret for user information, and the deployment ENV vars for other configuration */}}
+  {{- if .Values.config.globalStanza }}
+  SAMBA_GLOBAL_STANZA: |-
+{{ .Values.config.globalStanza | indent 4 }}
+  {{- end }}
   {{- range $name, $config := .Values.config.volumeConfigs }}
-  SAMBA_VOLUME_CONFIG_{{ $name | upper }}: {{- $config | indent 4 }}
+  SAMBA_VOLUME_CONFIG_{{ $name | upper }}: |-
+{{- $config | nindent 4 }}
   {{- end }}
