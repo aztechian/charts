@@ -1,0 +1,142 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/servercontainers/samba
+  tag: smbd-only-latest
+  pullPolicy: Always
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: LoadBalancer
+  port: 445
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hostname: samba.local
+  path: /
+  pathType: ImplementationSpecific
+  extraHosts: []
+    # - host: chart-example.local
+    #   paths:
+    #     - path: /
+    #       pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+persistence: {}
+  # media:
+  #   storageClass: external
+  #   accessMode: ReadWriteOnce
+  #   size: 4Ti
+  # www:
+  #   storageClass: default
+  #   accessMode: ReadWriteOnce
+  #   size: 4Ti
+
+config:
+  # -- Set the timezone string for the container, the default is UTC
+  timezone:
+  # -- Set the log level for Samba, the default is 2
+  logLevel: "2"
+  # -- immediately fail the container start if user/group creation fails
+  failFast:
+  # -- Set the model icon for Samba in the finder, the default is "TimeCapsule"
+  model:
+  # -- Set the server string for Samba, the default is "Samba Server"
+  serverString:
+  # -- Set the server role for Samba, the default is "standalone"
+  serverRole:
+  # -- Set the Map to Guest user for Samba, the default is "Bad User"
+  mapToGuest:
+  # -- Set the workgroup for Samba, the default is "WORKGROUP"
+  workgroup:
+  # -- Set configuration values in the Global section of smb.conf
+  globalStanza: ""
+  # -- Create volume configurations in the smb.conf. See https://github.com/ServerContainers/samba?tab=readme-ov-file#environment-variables-and-defaults for details
+  volumeConfigs: {}
+    # media: blah, blah, blah
+    # public: blah, blah, blah
+    # www: blah, blah, blah
+  # -- Create group accounts on the container OS and Samba. Each map entry should be the name of the group as the key, and the value of `gid` as the value.
+  groups: {}
+    # family: 1000
+  # -- Create user accounts on the container OS and Samba. Each map entry should be the name of the user as the key, and values of `password`, `uid` (optional), and `groups` (optional)
+  accounts: {}
+    # user1:
+    #   password: password1
+    #   uid: 1001
+    #   groups:
+    #     - family
+  avahi:
+    disabled: true
+    hostname:
+  wsdd2:
+    disabled: true
+    parameters:
+  netbios:
+    disabled: true

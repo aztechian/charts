@@ -1,0 +1,14 @@
+apiVersion: v2
+name: samba
+description: |-
+  A Helm chart for deploying ServerContainer's samba into Kubernetes.
+  
+  See https://github.com/ServerContainers/samba for more information about the image and details on the configuration options.
+
+type: application
+icon: https://avatars.githubusercontent.com/u/20579574?s=48&v=4
+version: 1.0.0
+# servercontainer labels end up like "smbd-only-a3.20.3-s4.19.9-r0" indicating the avahi and samba version respectively.
+# This doesn't really make sense to expose in the chart, so we'll just rely on latest - or let a user override with image.tag
+# Normally, we prefer to derive the tag from appVersion.
+appVersion: "4.19" 

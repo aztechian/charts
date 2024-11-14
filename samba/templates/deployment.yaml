@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "samba.fullname" . }}
+  labels:
+    {{- include "samba.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "samba.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "samba.labels" . | nindent 8 }}
+	{{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "samba.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            {{- if .Values.config.timezone }}
+            - name: TZ
+              value: {{ .Values.config.timezone | quote }}
+            {{- end }}
+            {{- if .Values.config.failFast }}
+            - name: FAIL_FAST
+              value: {{ .Values.config.failFast | quote }}
+            {{- end }}
+            {{- if .Values.config.model }}
+            - name: MODEL
+              value: {{ .Values.config.model | quote }}
+            {{- end }}
+            {{- if .Values.config.serverRole }}
+            - name: SAMBA_CONF_SERVER_ROLE
+              value: {{ .Values.config.serverRole | quote }}
+            {{- end }}
+            {{- if .Values.config.logLevel }}
+            - name: SAMBA_CONF_LOG_LEVEL
+              value: {{ .Values.config.logLevel | quote }}
+            {{- end }}
+            {{- if .Values.config.workgroup }}
+            - name: SAMBA_CONF_WORKGROUP
+              value: {{ .Values.config.workgroup | quote }}
+            {{- end }}
+            {{- if .Values.config.serverString }}
+            - name: SAMBA_CONF_SERVER_STRING
+              value: {{ .Values.config.serverString | quote }}
+            {{- end }}
+            {{- if .Values.config.mapToGuest }}
+            - name: SAMBA_CONF_MAP_TO_GUEST
+              value: {{ .Values.config.mapToGuest | quote }}
+            {{- end }}
+            {{- if .Values.config.wsdd2.disabled }}
+            - name: WSDD2_DISABLE
+              value: "1"
+            {{- end }}
+            {{- if and (not .Values.config.wsdd2.disabled) .Values.config.wsdd2.parameters }}
+            - name: WSDD2_PARAMETERS
+              value: {{ .Values.config.wsdd2.parameters | quote }}
+            {{- end }}
+            {{- if .Values.config.netbios.disabled }}
+            - name: NETBIOS_DISABLE
+              value: "1"
+            {{- end }}
+            {{- if .Values.config.avahi.disabled }}
+            - name: AVAHI_DISABLE
+              value: "1"
+            {{- end }}
+            {{- if and (not .Values.config.avahi.disabled) .Values.config.avahi.hostname }}
+            - name: AVAHI_HOSTNAME
+              value: {{ .Values.config.avahi.hostname | quote }}
+            {{- end }}
+          envFrom:
+            configMapRef:
+              name: {{ include "samba.fullname" . }}-conf
+            secretRef:
+              name: {{ include "samba.fullname" . }}-users
+          ports:
+            - containerPort: 445
+              protocol: TCP
+              name: smb
+          livenessProbe:
+            tcpSocket:
+              port: 445
+          readinessProbe:
+            tcpSocket:
+              port: 445
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- with .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
