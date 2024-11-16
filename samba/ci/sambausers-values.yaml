@@ -1,0 +1,10 @@
+---
+config:
+  accounts:
+    user1:
+      password: password1
+      uid: 9889
+      groups:
+        - family
+  groups:
+    family: 7777

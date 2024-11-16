@@ -1,0 +1,11 @@
+# I can't find a way to create a PVC of "testing" before this test is run, so it will fail because of
+# not finding the PVC.
+---
+volumes:
+  - name: testing
+    persistentVolumeClaim:
+      claimName: testing
+volumeMounts:
+  - name: testing
+    mountPath: /shares/test
+    readOnly: false
