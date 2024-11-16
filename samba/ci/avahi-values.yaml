@@ -1,0 +1,4 @@
+config:
+  avahi:
+    disabled: false
+    hostname: testingserver

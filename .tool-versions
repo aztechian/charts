@@ -1,4 +1,5 @@
 helm-docs 1.11.3
-kubectl 1.27.7
-helm 3.13.2
+kubectl 1.29.5
+helm 3.16.3
 kubeval 0.16.1
+helm-ct 3.11.0

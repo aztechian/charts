@@ -1,0 +1,6 @@
+---
+config:
+  globalStanza: |-
+    fruit:metadata = stream
+    fruit:resource = xattr
+    veto files = /.AppleDB/.AppleDouble/.AppleDesktop/Network Trash Folder/TheFindByContentFolder/TheVolumeSettingsFolder/.TemporaryItems/.Trashes/

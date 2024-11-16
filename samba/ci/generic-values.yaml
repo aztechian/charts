@@ -1,0 +1,7 @@
+config:
+  timezone: "America/New_York"
+  model: "TimeCapsule"
+  logLevel: "3"
+  failFast: "true"
+  serverString: "Samba Test"
+  workgroup: "TEST"

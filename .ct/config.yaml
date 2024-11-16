@@ -1,0 +1,5 @@
+chart-dirs:
+  - .
+upgrade: true
+skip-missing-values: true
+helm-extra-args: --timeout=90
