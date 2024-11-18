@@ -1,18 +1,10 @@
 name: Helm Chart Testing
 
 on:
-  pull_request:
-    branches:
-      - main
-      - master
-  push:
-    tags:
-      - v*
-
-  # workflow_run:
-  #   workflows: [Helm Chart linting]
-  #   types:
-  #     - completed
+  workflow_run:
+    workflows: [Helm Chart linting]
+    types:
+      - completed
 
 # This ensures that previous jobs for the PR are canceled when the PR is updated.
 concurrency:
