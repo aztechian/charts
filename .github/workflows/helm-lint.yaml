@@ -35,7 +35,7 @@ jobs:
         run: |
           set +e
           ERROR=0
-          for c in $(find . -name Chart.yaml); do
+          for c in */Chart.yaml; do
             chart=$(dirname "$c")
             echo "::group::Linting $chart"
             helm lint "$chart" || ERROR=1
