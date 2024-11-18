@@ -50,15 +50,15 @@ jobs:
           # Loop through each chart and values file
           for indexFile in */Chart.yaml; do
             chart=$(dirname "$indexFile")
-            for values in "$chart"/ci/*.yaml; do
+            echo "::group::Testing $chart"
+            for values in "$chart/ci/*.yaml"; do
               values_name=$(basename "$values" .yaml)
               report_file="test-reports/${chart}-${values_name}.xml"
-              echo "::group Testing $chart_name with $values"
               
               # Run Helm template and validate with kubeconform, outputting to JUnit file. Add DataTrees CRD catalog for schema validation
               helm template --debug --generate-name "$chart" -f "$values" | kubeconform -strict -summary --output junit  -schema-location default -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' > "$report_file"
-              echo "::endgroup::"
             done
+            echo "::endgroup::"
           done
 
       - name: Publish Test Results
