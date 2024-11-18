@@ -1,0 +1,69 @@
+name: Helm Chart Unit Testing
+
+on:
+  workflow_run:
+    workflows: [Helm Chart linting]
+    types:
+      - completed
+    branches:
+      - main
+      - master
+    tags:
+      # could be triggered by a global release across all charts, which would be of form "v.N.N.N"
+      - v*
+
+# This ensures that previous jobs for the PR are canceled when the PR is
+# updated.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  kubeconform:
+    name: Test Helm Charts via kubeconform
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Kubeconform
+        run: |
+          curl -LO https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar xzf -
+          mv kubeconform-linux-amd64/kubeconform /usr/local/bin/
+          rm -rf kubeconform-linux-amd64
+
+      - name: Create Test Reports Directory
+        run: mkdir -p test-reports
+
+      - name: Run Helm Template and Validate Charts
+        id: helm-test
+        run: |
+          # Loop through each chart and values file
+          for indexFile in */Chart.yaml; do
+            chart=$(dirname "$indexFile")
+            for values in "$chart"/ci/*.yaml; do
+              values_name=$(basename "$values" .yaml)
+              report_file="test-reports/${chart}-${values_name}.xml"
+              echo "::group Testing $chart_name with $values"
+              
+              # Run Helm template and validate with kubeconform, outputting to JUnit file. Add DataTrees CRD catalog for schema validation
+              helm template --debug --generate-name "$chart" -f "$values" | kubeconform -strict -summary --output junit  -schema-location default -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' > "$report_file"
+              echo "::endgroup::"
+            done
+          done
+
+      - name: Publish Test Results
+        permissions:
+          checks: write
+          pull-requests: write
+        uses: EnricoMi/publish-unit-test-result-action/linux@v2
+        with:
+          check_name: Kubeconform Helm Chart Tests
+          comment_mode: ${{ (github.event.workflow_run.event == 'pull_request' || github.event_name == 'pull_request') && 'changes' || 'off' }}
+          files: test-reports/*.xml
+          format: junit
