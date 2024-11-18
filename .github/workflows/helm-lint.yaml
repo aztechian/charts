@@ -36,7 +36,10 @@ jobs:
           set +e
           ERROR=0
           for c in $(find . -name Chart.yaml); do
-            helm lint "$(dirname "$c")" || ERROR=1
+            chart=$(dirname "$c")
+            echo "::group::Linting $chart"
+            helm lint "$chart" || ERROR=1
+            echo "::endgroup::"
           done
           exit $ERROR
   helm-docs:
