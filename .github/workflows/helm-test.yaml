@@ -38,8 +38,8 @@ jobs:
       - name: Set up Kubeconform
         run: |
           curl -sL https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar xzf -
-          mv kubeconform-linux-amd64/kubeconform /usr/local/bin/
-          rm -rf kubeconform-linux-amd64
+          mv kubeconform /usr/local/bin/
+          rm -f LICENSE
 
       - name: Create test-reports Directory
         run: mkdir -p test-reports
