@@ -3,7 +3,7 @@ name: Release Charts
 on:
   workflow_call:
   workflow_run:
-    workflows: [Helm Chart Unit Testing]
+    workflows: [Helm Chart Testing]
     types:
       - completed
     branches:
