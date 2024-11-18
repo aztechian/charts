@@ -38,7 +38,7 @@ jobs:
           mv kubeconform-linux-amd64/kubeconform /usr/local/bin/
           rm -rf kubeconform-linux-amd64
 
-      - name: Create Test Reports Directory
+      - name: Create test-reports Directory
         run: mkdir -p test-reports
 
       - name: Run Helm Template and Validate Charts
