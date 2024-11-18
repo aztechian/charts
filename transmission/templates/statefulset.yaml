@@ -4,6 +4,9 @@ metadata:
   name: {{ include "transmission.fullname" . }}
   labels:
     {{- include "transmission.labels" . | nindent 4 }}
+  annotations:
+    checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+    checksum/vpn-config: {{ include (print $.Template.BasePath "/vpn-secret.yaml") . | sha256sum }}
 spec:
   selector:
     matchLabels:

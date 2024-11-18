@@ -1,0 +1,5 @@
+---
+vpn:
+  type: openvpn
+  conf: |-
+    testing 1... 2... 3...
