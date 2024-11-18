@@ -21,7 +21,6 @@ concurrency:
 
 jobs:
   kubeconform:
-    name: Test Helm Charts via kubeconform
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -32,8 +31,6 @@ jobs:
 
       - name: Install Helm
         uses: azure/setup-helm@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Kubeconform
         run: |
@@ -47,17 +44,21 @@ jobs:
       - name: Run Helm Template and Validate Charts
         id: helm-test
         run: |
-          # Loop through each chart and values file
+          # helm template -> kubeconform for each chart and values file
           for indexFile in */Chart.yaml; do
             chart=$(dirname "$indexFile")
             echo "::group::Testing $chart"
-            for values in "$chart/ci/*.yaml"; do
-              values_name=$(basename "$values" .yaml)
-              report_file="test-reports/${chart}-${values_name}.xml"
-              
-              # Run Helm template and validate with kubeconform, outputting to JUnit file. Add DataTrees CRD catalog for schema validation
-              helm template --debug --generate-name "$chart" -f "$values" | kubeconform -strict -summary --output junit  -schema-location default -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' > "$report_file"
-            done
+            if [ -d "${chart}/ci" ]; then
+              for values in ${chart}/ci/*.yaml; do
+                values_name=$(basename "$values" .yaml)
+                report_file="test-reports/${chart}-${values_name}.xml"
+                
+                # Run Helm template and validate with kubeconform, outputting to JUnit file. Add DataTrees CRD catalog for schema validation
+                set -x
+                helm template --debug --generate-name "$chart" -f "$values" | kubeconform -strict -summary --output junit  -schema-location default -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' > "$report_file"
+                set +x
+              done
+            fi
             echo "::endgroup::"
           done
 
@@ -67,4 +68,3 @@ jobs:
           check_name: Kubeconform Helm Chart Tests
           comment_mode: ${{ (github.event.workflow_run.event == 'pull_request' || github.event_name == 'pull_request') && 'changes' || 'off' }}
           files: test-reports/*.xml
-          format: junit
