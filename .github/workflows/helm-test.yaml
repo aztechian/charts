@@ -37,7 +37,7 @@ jobs:
 
       - name: Set up Kubeconform
         run: |
-          curl -LO https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar xzf -
+          curl -sL https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar xzf -
           mv kubeconform-linux-amd64/kubeconform /usr/local/bin/
           rm -rf kubeconform-linux-amd64
 
