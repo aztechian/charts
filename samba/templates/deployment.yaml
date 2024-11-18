@@ -17,7 +17,7 @@ spec:
       {{- end }}
       labels:
         {{- include "samba.labels" . | nindent 8 }}
-	{{- with .Values.podLabels }}
+        {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
@@ -88,10 +88,10 @@ spec:
               value: {{ .Values.config.avahi.hostname | quote }}
             {{- end }}
           envFrom:
-            configMapRef:
-              name: {{ include "samba.fullname" . }}-conf
-            secretRef:
-              name: {{ include "samba.fullname" . }}-users
+            - configMapRef:
+                name: {{ include "samba.fullname" . }}-conf
+            - secretRef:
+                name: {{ include "samba.fullname" . }}-users
           ports:
             - containerPort: 445
               protocol: TCP
@@ -104,14 +104,23 @@ spec:
               port: 445
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
           volumeMounts:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-      {{- with .Values.volumes }}
+            {{- range $volumeName, $volumeConfig := .Values.persistence }}
+            - name: {{ $volumeName }}
+              mountPath: /shares/{{ $volumeName }}
+            {{- end }}
+            {{- if .Values.volumeMounts }}
+            {{- toYaml .Values.volumeMounts | nindent 12 }}
+            {{- end }}
       volumes:
+        {{- range $volumeName, $volumeConfig := .Values.persistence }}
+        - name: {{ $volumeName }}
+          persistentVolumeClaim:
+            claimName: {{ include "samba.fullname" $ }}-{{ $volumeName }}
+        {{- end }}
+        {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -33,9 +33,15 @@ jobs:
 
       - name: Run helm lint
         run: |
-          for c in $(find . -name Chart.yaml); do
-            helm lint $(basename ${c%%/Chart.yaml})
-          done;
+          set +e
+          ERROR=0
+          for c in */Chart.yaml; do
+            chart=$(dirname "$c")
+            echo "::group::Linting $chart"
+            helm lint "$chart" || ERROR=1
+            echo "::endgroup::"
+          done
+          exit $ERROR
   helm-docs:
     runs-on: ubuntu-latest
     permissions:
