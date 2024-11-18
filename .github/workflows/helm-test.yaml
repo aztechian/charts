@@ -65,6 +65,6 @@ jobs:
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action/linux@v2
         with:
-          check_name: Kubeconform Helm Chart Tests
+          check_name: Kubeconform Results
           comment_mode: ${{ (github.event.workflow_run.event == 'pull_request' || github.event_name == 'pull_request') && 'changes' || 'off' }}
           files: test-reports/*.xml
