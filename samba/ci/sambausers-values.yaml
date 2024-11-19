@@ -6,5 +6,7 @@ config:
       uid: 9889
       groups:
         - family
+        - www
   groups:
     family: 7777
+    www: 8888
