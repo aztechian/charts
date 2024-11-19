@@ -89,6 +89,19 @@ entries:
   samba:
   - apiVersion: v2
     appVersion: "4.19"
+    created: "2024-11-19T03:16:35.728682642Z"
+    description: A Helm chart for deploying ServerContainer's samba into Kubernetes.  See
+      https://github.com/ServerContainers/samba for more information about the image
+      and details on the configuration options.
+    digest: f8dcf061701ae3613898631cf9c982bc7c68a497aa7036b9e819665fd31be625
+    icon: https://avatars.githubusercontent.com/u/20579574?s=48&v=4
+    name: samba
+    type: application
+    urls:
+    - https://github.com/aztechian/charts/releases/download/samba-1.0.3/samba-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
+    appVersion: "4.19"
     created: "2024-11-18T06:00:19.322514808Z"
     description: A Helm chart for deploying ServerContainer's samba into Kubernetes.  See
       https://github.com/ServerContainers/samba for more information about the image
@@ -320,6 +333,27 @@ entries:
   transmission:
   - apiVersion: v2
     appVersion: 4.0.6
+    created: "2024-11-19T03:16:35.877042628Z"
+    description: This chart creates a deployment of Transmission, a BitTorrent client.
+      Additionally, it creates a VPN connection to tunnel bittorrent traffic through.
+      The Transmission UI is still accessible via a Service and/or Ingress in the
+      cluster, but all torrent traffic is sent through the VPN interface.
+    digest: 0ff8b36119e82029f86a03faa444d8d5d7e770cde2868a7d75524483c76e5df1
+    icon: https://transmissionbt.com/images/gearshift.png
+    maintainers:
+    - email: ian@imartin.net
+      name: Ian Martin
+    name: transmission
+    sources:
+    - https://github.com/dperson/openvpn-client/
+    - https://github.com/transmission/transmission
+    - https://hub.docker.com/r/linuxserver/transmission
+    type: application
+    urls:
+    - https://github.com/aztechian/charts/releases/download/transmission-2.0.2/transmission-2.0.2.tgz
+    version: 2.0.2
+  - apiVersion: v2
+    appVersion: 4.0.6
     created: "2024-07-09T03:17:45.948088272Z"
     description: This chart creates a deployment of Transmission, a BitTorrent client.
       Additionally, it creates a VPN connection to tunnel bittorrent traffic through.
@@ -414,4 +448,4 @@ entries:
     urls:
     - https://github.com/aztechian/charts/releases/download/youtubedl-material-0.2.0/youtubedl-material-0.2.0.tgz
     version: 0.2.0
-generated: "2024-11-18T06:00:19.322564551Z"
+generated: "2024-11-19T03:16:35.877100617Z"
