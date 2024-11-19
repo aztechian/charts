@@ -37,6 +37,7 @@ securityContext: {}
 service:
   type: LoadBalancer
   port: 445
+  annotations: {}
 
 ingress:
   enabled: false
