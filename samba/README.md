@@ -1,6 +1,6 @@
 # samba
 
-![Version: 1.0.4](https://img.shields.io/badge/Version-1.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.19](https://img.shields.io/badge/AppVersion-4.19-informational?style=flat-square)
+![Version: 1.0.5](https://img.shields.io/badge/Version-1.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.19](https://img.shields.io/badge/AppVersion-4.19-informational?style=flat-square)
 
 A Helm chart for deploying ServerContainer's samba into Kubernetes.
 
@@ -50,6 +50,7 @@ See https://github.com/ServerContainers/samba for more information about the ima
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
+| service.annotations | object | `{}` |  |
 | service.port | int | `445` |  |
 | service.type | string | `"LoadBalancer"` |  |
 | serviceAccount.annotations | object | `{}` |  |
