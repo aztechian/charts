@@ -155,12 +155,12 @@ spec:
         {{- if .Values.overrideResponse }}
         - name: response
           configMap:
-            name: {{- include "http-echo.fullname" . }}-response
+            name: {{ include "http-echo.fullname" . }}-response
         {{- end }}
         {{- if and .Values.tls.cert .Values.tls.key }}
         - name: tls
           secret:
-            secretName: {{- include "http-echo.fullname" . }}-tls
+            secretName: {{ include "http-echo.fullname" . }}-tls
         {{- else if .Values.tls.secret.reference }}
         - name: tls
           secret:
