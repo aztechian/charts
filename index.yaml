@@ -89,6 +89,41 @@ entries:
   http-echo:
   - apiVersion: v2
     appVersion: "35"
+    created: "2024-11-26T16:16:05.130029823Z"
+    description: Deploy mendhak/http-https-echo on kubernetes. This is a simple http
+      server that echoes the request headers and body back to the client. It is very
+      useful for testing and debugging webhooks, and Ingress configurations.  Please
+      see [mendhak/http-https-echo](https://github.com/mendhak/docker-http-https-echo)
+      for more information, and how to use options available in this chart. As of
+      now, all options described in the source project are available in this chart.
+    digest: 1cf9f10348c95bdf6efac8021d7bc068a7381f3512a8689acbed9afc8a93f8b6
+    keywords:
+    - http
+    - echo
+    - webhook
+    - ingress
+    - debugging
+    - testing
+    - headers
+    - body
+    - kubernetes
+    - helm
+    - chart
+    - http-echo
+    - http-https-echo
+    - mendhak
+    - aztechian
+    maintainers:
+    - email: ian@imartin.net
+      name: aztechian
+      url: https://github.com/aztechian
+    name: http-echo
+    type: application
+    urls:
+    - https://github.com/aztechian/charts/releases/download/http-echo-1.0.1/http-echo-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: "35"
     created: "2024-11-26T04:25:24.061111882Z"
     description: Deploy mendhak/http-https-echo on kubernetes. This is a simple http
       server that echoes the request headers and body back to the client. It is very
@@ -495,4 +530,4 @@ entries:
     urls:
     - https://github.com/aztechian/charts/releases/download/youtubedl-material-0.2.0/youtubedl-material-0.2.0.tgz
     version: 0.2.0
-generated: "2024-11-26T04:25:24.061174388Z"
+generated: "2024-11-26T16:16:05.130083263Z"
