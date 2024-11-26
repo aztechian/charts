@@ -86,6 +86,27 @@ entries:
     urls:
     - https://github.com/aztechian/charts/releases/download/emby-1.0.4/emby-1.0.4.tgz
     version: 1.0.4
+  http-echo:
+  - apiVersion: v2
+    appVersion: "35"
+    created: "2024-11-26T04:25:24.061111882Z"
+    description: Deploy mendhak/http-https-echo on kubernetes. This is a simple http
+      server that echoes the request headers and body back to the client. It is very
+      useful for testing and debugging webhooks, and Ingress configurations.  Please
+      see [mendhak/http-https-echo](https://github.com/mendhak/docker-http-https-echo)
+      for more information, and how to use options available in this chart. As of
+      now, all options described in the source project are available in this chart.
+    digest: e35c8c7ea8de7df9c1f7d55d299275b73d3714a9acc5a4e37941dfefbae27feb
+    maintainers:
+    - email: ian@imartin.net
+      name: Aztechian
+    name: http-echo
+    tags: http, echo, webhook, ingress, debugging, testing, headers, body, kubernetes,
+      helm, chart, http-echo, http-https-echo, mendhak, aztechian
+    type: application
+    urls:
+    - https://github.com/aztechian/charts/releases/download/http-echo-1.0.0/http-echo-1.0.0.tgz
+    version: 1.0.0
   samba:
   - apiVersion: v2
     appVersion: "4.19"
@@ -474,4 +495,4 @@ entries:
     urls:
     - https://github.com/aztechian/charts/releases/download/youtubedl-material-0.2.0/youtubedl-material-0.2.0.tgz
     version: 0.2.0
-generated: "2024-11-19T22:38:14.906410416Z"
+generated: "2024-11-26T04:25:24.061174388Z"
