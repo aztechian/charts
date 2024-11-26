@@ -1,6 +1,6 @@
 # http-echo
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 35](https://img.shields.io/badge/AppVersion-35-informational?style=flat-square)
+![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 35](https://img.shields.io/badge/AppVersion-35-informational?style=flat-square)
 
 Deploy mendhak/http-https-echo on kubernetes. This is a simple http server that echoes the request headers and body back to the client.
 It is very useful for testing and debugging webhooks, and Ingress configurations.
@@ -12,7 +12,7 @@ As of now, all options described in the source project are available in this cha
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Aztechian | <ian@imartin.net> |  |
+| aztechian | <ian@imartin.net> | <https://github.com/aztechian> |
 
 ## Values
 
@@ -46,9 +46,9 @@ As of now, all options described in the source project are available in this cha
 | ingress.tls.enabled | bool | `false` |  |
 | ingress.tls.secretName | string | `""` |  |
 | jwtHeader | string | `nil` | Use the value of this header as the JWT token to decode and return in the response. |
-| livenessProbe.httpGet.path | string | `"/"` |  |
+| livenessProbe.httpGet.path | string | `"/healthz"` |  |
 | livenessProbe.httpGet.port | string | `"http"` |  |
-| logIgnorePath | string | `nil` | Don't log requests to this path. |
+| logIgnorePath | string | `"/healthz"` | Don't log requests to this path. `/healthz` is the default because it matches the liveness and readiness probes. This excludes showing the kube-probe health check in the logs. |
 | logWithoutNewline | bool | `false` | Turn off the newline at the end of the log output. |
 | metrics | object | `{"enabled":false,"metricType":"summary","path":null,"serviceMonitor":{"additionalLabels":{},"enabled":true},"withMethod":true,"withPath":false,"withStatus":true}` | Use Prometheus metrics to gather information from the http-echo server. |
 | metrics.metricType | string | `"summary"` | The type of metrics to expose, can be "summary" or "histogram" |
@@ -65,7 +65,7 @@ As of now, all options described in the source project are available in this cha
 | podLabels | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
 | preserveHeaderCase | bool | `false` | Preserve the case of headers in the response. |
-| readinessProbe.httpGet.path | string | `"/"` |  |
+| readinessProbe.httpGet.path | string | `"/healthz"` |  |
 | readinessProbe.httpGet.port | string | `"http"` |  |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |

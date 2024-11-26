@@ -93,11 +93,11 @@ resources:
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
   httpGet:
-    path: /
+    path: /healthz
     port: http
 readinessProbe:
   httpGet:
-    path: /
+    path: /healthz
     port: http
 
 #This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
@@ -149,8 +149,8 @@ affinity: {}
 jwtHeader:
 # -- Disable ExpressJS request logs in the container stdout output.
 disableRequestLogs: false
-# -- Don't log requests to this path.
-logIgnorePath:
+# -- Don't log requests to this path. `/healthz` is the default because it matches the liveness and readiness probes. This excludes showing the kube-probe health check in the logs.
+logIgnorePath: /healthz
 # -- Turn off the newline at the end of the log output.
 logWithoutNewline: false
 # -- Disable the JSON output in the response
