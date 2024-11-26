@@ -1,0 +1,6 @@
+---
+tls:
+  cert: |-
+    PUBLIC CERTIFICATE CONTENTS HERE
+  key: |-
+    PRIVATE KEY CONTENTS HERE

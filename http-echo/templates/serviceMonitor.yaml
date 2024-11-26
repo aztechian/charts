@@ -1,0 +1,17 @@
+{{- if .Capabilities.APIVersions.Has "monitoring.coreos.com/v1" }}
+{{- if .Values.metrics.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Release.Name }}
+  labels: {{- include "http-echo.labels" . | nindent 4 }}
+  {{- .Values.metrics.serviceMonitor.additionalLabels | toYaml | nindent 4 }}
+spec:
+  selector:
+    matchLabels: {{- include "http-echo.selectorLabels" . | nindent 6 }}
+  endpoints:
+    - port: http
+      interval: 30s
+      path: {{ .Values.metrics.path }}
+{{- end }}
+{{- end }}

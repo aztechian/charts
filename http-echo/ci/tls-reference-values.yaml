@@ -1,0 +1,6 @@
+---
+tls:
+  secret:
+    reference: my-tls-secret
+    cert: custom-chain.crt
+    privateKey: custom-key.pem

@@ -1,0 +1,183 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "http-echo.fullname" . }}
+  labels:
+    {{- include "http-echo.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "http-echo.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "http-echo.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "http-echo.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            {{- if .Values.jwtHeader }}
+            - name: JWT_HEADER
+              value: {{ .Values.jwtHeader | quote }}
+            {{- end }}
+            {{- if .Values.disableRequestLogs }}
+            - name: DISABLE_REQUEST_LOGS
+              value: "true"
+            {{- end }}
+            {{- if .Values.logIgnorePath}}
+            - name: LOG_IGNORE_PATH
+              value: {{ .Values.logIgnorePath | quote }}
+            {{- end }}
+            {{- if .Values.logWithoutNewline }}
+            - name: LOG_WITHOUT_NEWLINE
+              value: "true"
+            {{- end }}
+            {{- if not .Values.echoBackToClient }}
+            - name: ECHO_BACK_TO_CLIENT
+              value: "false"
+            {{- end }}
+            {{- if .Values.includeEnv }}
+            - name: ECHO_INCLUDE_ENV_VARS
+              value: "1"
+            {{- end }}
+            {{- if .Values.mtls }}
+            - name: MTLS_ENABLE
+              value: "1"
+            {{- end }}
+            {{- if .Values.preserveHeaderCase}}
+            - name: PRESERVE_HEADER_CASE
+              value: "true"
+            {{- end }}
+
+            {{- if .Values.cors.origin }}
+            - name: CORS_ALLOW_ORIGIN
+              value: {{ .Values.cors.origin | quote }}
+            {{- if .Values.cors.methods }}
+            - name: CORS_ALLOW_METHODS
+              value: {{ .Values.cors.methods | quote }}
+            {{- end }}
+            {{- if .Values.cors.methods }}
+            - name: CORS_ALLOW_HEADERS
+              value: {{ .Values.cors.headers | quote }}
+            {{- end }}
+            {{- if .Values.cors.credentials }}
+            - name: CORS_ALLOW_CREDENTIALS
+              value: "true"
+            {{- end }}
+            {{- end }}
+
+            {{- if .Values.metrics.enabled }}
+            - name: PROMETHEUS_ENABLED
+              value: "true"
+            {{- if .Values.metrics.path }}
+            - name: PROMETHEUS_METRICS_PATH
+              value: {{ .Values.metrics.path | quote }}
+            {{- end }}
+            {{- if .Values.metrics.withPath }}
+            - name: PROMETHEUS_WITH_PATH
+              value: "true"
+            {{- end }}
+            {{- if .Values.metrics.withMethod }}
+            - name: PROMETHEUS_WITH_METHOD
+              value: "true"
+            {{- end }}
+            {{- if .Values.metrics.withStatus }}
+            - name: PROMETHEUS_WITH_STATUS
+              value: "true"
+            {{- end }}
+            {{- if .Values.metrics.metricType }}
+            - name: PROMETHEUS_METRIC_TYPE
+              value: {{ .Values.metrics.metricType | quote }}
+            {{- end }}
+            {{- end }}
+
+            {{- if .Values.overrideResponse }}
+            - name: OVERRIDE_RESPONSE_BODY_FILE_PATH
+              value: /app/response/content
+            {{- end }}
+            {{- if or (and .Values.tls.cert .Values.tls.key) .Values.tls.secret.reference }}
+            - name: HTTPS_CERT_FILE
+              value: "/app/tls/{{ .Values.tls.secret.cert | default "tls.crt" }}"
+            - name: HTTPS_KEY_FILE
+              value: "/app/tls/{{ .Values.tls.secret.privateKey | default "tls.key" }}"
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            {{- if or (and .Values.tls.cert .Values.tls.key) .Values.tls.secret.reference }}
+            - name: https
+              containerPort: 8443
+              protocol: TCP
+            {{- end }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            {{- if .Values.overrideResponse }}
+            - name: response
+              mountPath: /app/response
+              readOnly: true
+            {{- end }}
+            {{- if or (and .Values.tls.cert .Values.tls.key) .Values.tls.secret.reference }}
+            - name: tls
+              mountPath: /app/tls
+              readOnly: true
+            {{- end }}
+            {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      volumes:
+        {{- if .Values.overrideResponse }}
+        - name: response
+          configMap:
+            name: {{- include "http-echo.fullname" . }}-response
+        {{- end }}
+        {{- if and .Values.tls.cert .Values.tls.key }}
+        - name: tls
+          secret:
+            secretName: {{- include "http-echo.fullname" . }}-tls
+        {{- else if .Values.tls.secret.reference }}
+        - name: tls
+          secret:
+            secretName: {{ .Values.tls.secret.reference }}
+        {{- end }}
+        {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
