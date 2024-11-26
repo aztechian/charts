@@ -44,20 +44,22 @@ jobs:
         run: |
           # helm template -> kubeconform for each chart and values file
           shopt -s nullglob
+          exit_code=0
           for indexFile in */Chart.yaml; do
             chart=$(dirname "$indexFile")
             echo "::group::Testing $chart"
-              for values in ${chart}/ci/*.yaml; do
-                values_name=$(basename "$values" .yaml)
-                report_file="test-reports/${chart}-${values_name}.xml"
-                
-                # Run Helm template and validate with kubeconform, outputting to JUnit file. Add DataTrees CRD catalog for schema validation
-                set -x
-                helm template --debug --generate-name "$chart" -f "$values" | kubeconform -strict -summary --output junit  -schema-location default -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' > "$report_file"
-                set +x
-              done
+            for values in ${chart}/ci/*.yaml; do
+              values_name=$(basename "$values" .yaml)
+              report_file="test-reports/${chart}-${values_name}.xml"
+              
+              # Run Helm template and validate with kubeconform, outputting to JUnit file. Add DataTrees CRD catalog for schema validation
+              set -x
+              helm template --debug --generate-name "$chart" -f "$values" | kubeconform -strict -summary --output junit  -schema-location default -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' > "$report_file" || exit_code=$?
+              set +x
+            done
             echo "::endgroup::"
           done
+          exit $exit_code
 
       - name: Publish Test Results
         if: always()
