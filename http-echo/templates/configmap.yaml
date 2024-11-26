@@ -1,0 +1,10 @@
+{{- if .Values.overrideResponse }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "http-echo.fullname" . }}-response
+  labels: {{- include "http-echo.labels" . | nindent 4 }}
+data:
+  content: |-
+    {{- .Values.overrideResponse | nindent 4 }}
+{{- end }}

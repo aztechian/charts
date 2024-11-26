@@ -1,0 +1,14 @@
+---
+jwtHeader: Authorization
+disableRequestLogs: true
+logIgnorePath: /healthz
+logWithoutNewline: true
+echoBackToClient: true
+includeEnv: true
+cors:
+  origin: "*"
+  methods: "GET, POST, PUT, DELETE, OPTIONS"
+  headers: "Authorization, Content-Type"
+  credentials: true
+mtls: true
+preserveHeaderCase: true

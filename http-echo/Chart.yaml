@@ -1,0 +1,24 @@
+apiVersion: v2
+name: http-echo
+description: |-
+  Deploy mendhak/http-https-echo on kubernetes. This is a simple http server that echoes the request headers and body back to the client.
+  It is very useful for testing and debugging webhooks, and Ingress configurations.
+
+  Please see [mendhak/http-https-echo](https://github.com/mendhak/docker-http-https-echo) for more information, and how to use options available in this chart.
+  As of now, all options described in the source project are available in this chart.
+
+type: application
+
+version: 1.0.0
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application. Versions are not expected to
+# follow Semantic Versioning. They should reflect the version the application is using.
+# It is recommended to use it with quotes.
+appVersion: "35"
+
+maintainers:
+  - name: Aztechian
+    email: ian@imartin.net
+
+tags: http, echo, webhook, ingress, debugging, testing, headers, body, kubernetes, helm, chart, http-echo, http-https-echo, mendhak, aztechian

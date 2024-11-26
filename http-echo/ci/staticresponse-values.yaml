@@ -1,0 +1,11 @@
+---
+overrideResponse: |-
+  <html>
+  <head>
+    <title>Static Response</title>
+  </head>
+  <body>
+    <h1>Static Response</h1>
+    <p>This is a static response.</p>
+  </body>
+  </html>
