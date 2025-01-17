@@ -23,7 +23,7 @@ You'll notice that there is a Github release created for each chart in this repo
 
 [activity]: https://img.shields.io/github/commit-activity/m/aztechian/charts?labelColor=green&cacheSeconds=86400
 [release]: https://img.shields.io/github/release-date/aztechian/charts
-[helm]: https://img.shields.io/badge/Helm%20Charts?logo=helm&color=blue
+[helm]: https://img.shields.io/badge/Helm_Charts-326CE5?logo=helm
 [build]: https://img.shields.io/github/actions/workflow/status/aztechian/charts/helm-lint.yaml
 [license]: https://img.shields.io/github/license/aztechian/charts?color=orange
 [repostatus]: https://img.shields.io/website?url=https%3A%2F%2Frepos.imartin.io%2Fcharts%2Findex.yaml&logo=helm&label=repo
