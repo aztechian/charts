@@ -1,0 +1,4 @@
+---
+persistentVolume:
+  storageClass: gp3
+
