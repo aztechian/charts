@@ -1,6 +1,6 @@
 # cloudsync
 
-![Version: 1.3.3](https://img.shields.io/badge/Version-1.3.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.62.2](https://img.shields.io/badge/AppVersion-1.62.2-informational?style=flat-square)
+![Version: 1.3.4](https://img.shields.io/badge/Version-1.3.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.69.1](https://img.shields.io/badge/AppVersion-1.69.1-informational?style=flat-square)
 
 Helm Chart for periodically synchronizing cloud storage.
 
