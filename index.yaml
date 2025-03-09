@@ -237,6 +237,31 @@ entries:
     version: 1.0.0
   staticsite:
   - apiVersion: v2
+    appVersion: 1.27.4
+    created: "2025-03-09T20:46:23.990257277Z"
+    dependencies:
+    - name: nginx
+      repository: https://charts.bitnami.com/bitnami
+      version: 19.*
+    description: A static webserver. Uses nginx with a PersistentVolume for serving
+      content.
+    digest: 2bcb3a7663eda2f44f657948e3f81ca548a469666ceff6082f62cbab6d1e863f
+    keywords:
+    - nginx
+    - webserver
+    - www
+    - static
+    - website
+    - bitnami
+    maintainers:
+    - email: ian@imartin.net
+      name: Ian Martin
+    name: staticsite
+    type: application
+    urls:
+    - https://github.com/aztechian/charts/releases/download/staticsite-2.2.0/staticsite-2.2.0.tgz
+    version: 2.2.0
+  - apiVersion: v2
     appVersion: 1.25.4
     created: "2024-02-18T23:35:54.076571909Z"
     dependencies:
@@ -557,4 +582,4 @@ entries:
     urls:
     - https://github.com/aztechian/charts/releases/download/youtubedl-material-0.2.0/youtubedl-material-0.2.0.tgz
     version: 0.2.0
-generated: "2025-03-09T20:33:47.871983405Z"
+generated: "2025-03-09T20:46:23.990313542Z"
