@@ -22,8 +22,7 @@ jobs:
         id: input-convert
         run: |
           # use JQ to convert the input string to a proper JSON array
-          names=${{ inputs.chart_names }}
-          json_array=$(echo "$names" | jq -R 'split(",")')
+          json_array=$(echo "${{ inputs.chart_names }}" | jq -R 'split(",")')
           echo "chart_names=${json_array}" >> $GITHUB_OUTPUT
     outputs:
       chart_names: ${{ steps.input-convert.outputs.chart_names }}
