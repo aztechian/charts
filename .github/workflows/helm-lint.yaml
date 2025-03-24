@@ -125,7 +125,7 @@ jobs:
 
       - name: Comment PR with notice of changed chart
         if: steps.changed-charts.outputs.changed != ''
-        uses: thollander/actions-comment-pull-request@v2
+        uses: thollander/actions-comment-pull-request@v3
         with:
           message: |
             Hey there,
@@ -136,7 +136,7 @@ jobs:
             ```
 
             Before merging, you will need to bump the chart version so that it will publish properly. Please update the Chart.yaml of these charts, and push to this PR again.
-          comment_tag: releasecheck
+          comment-tag: releasecheck
           mode: recreate
 
       - name: fail if modified
