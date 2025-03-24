@@ -1,6 +1,13 @@
 name: Publish Helm Chart
 
 on:
+  # allow manual running of the workflow
+  workflow_dispatch:
+    inputs:
+      chart_names:
+        description: A comma separated list of chart names to publish to S3. This should be the output of helm/chart-releaser-action.
+        required: true
+        type: string
   workflow_call:
     inputs:
       chart_names:
