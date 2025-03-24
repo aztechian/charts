@@ -21,10 +21,10 @@ jobs:
       - name: convert intput to array
         id: input-convert
         run: |
-          # the sed replaces , with , " so that "inside elements" are correct format. Then wraps the ends with ["
+          # use JQ to convert the input string to a proper JSON array
           names=${{ inputs.chart_names }}
-          echo "chart_names=[\"${names}\"]" | sed 's/,/\", \"/g' >> $GITHUB_OUTPUT
-
+          json_array=$(echo "$names" | jq -R 'split(",")')
+          echo "chart_names=${json_array}" >> $GITHUB_OUTPUT
     outputs:
       chart_names: ${{ steps.input-convert.outputs.chart_names }}
 
@@ -42,6 +42,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      
+      - name: Install Helm
+        uses: azure/setup-helm@v4
 
       - name: Configure Git
         run: |
@@ -55,7 +58,7 @@ jobs:
           aws-region: us-east-2
 
       - name: Helm release
-        uses: shellbear/helm-release-action@main
+        uses: shellbear/helm-release-action@v0.3
         with:
           repo: s3://repos.imartin.io/charts
           chart: ${{ matrix.chart }}

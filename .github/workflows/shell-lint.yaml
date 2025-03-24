@@ -19,7 +19,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: reviewdog/action-shfmt@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           fail_on_error: true
   shellcheck:
     name: shellcheck
@@ -28,5 +27,3 @@ jobs:
       - uses: actions/checkout@v4
       - name: shellcheck
         uses: reviewdog/action-shellcheck@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
