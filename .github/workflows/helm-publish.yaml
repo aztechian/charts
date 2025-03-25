@@ -25,12 +25,12 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - name: convert intput to array
+      - name: convert input to array
         id: input-convert
         run: |
           echo "::debug::inputs = ${{ inputs.chart_names }}"
           # use JQ to convert the input string to a proper JSON array
-          json_array=$(echo "${{ inputs.chart_names }}" | jq -R 'split(",")|tostring')
+          json_array=$(echo "${{ inputs.chart_names }}" | jq -R 'split(",")')
           echo "chart_names=${json_array}" >> $GITHUB_OUTPUT
           echo "::debug::chart_names=${json_array}"
     outputs:
