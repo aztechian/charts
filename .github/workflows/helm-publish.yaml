@@ -17,12 +17,6 @@ on:
 
 jobs:
   setup:
-    # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
-    # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
-    permissions:
-      contents: write
-      id-token: write
-
     runs-on: ubuntu-latest
     steps:
       - name: convert input to array
@@ -40,6 +34,11 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     if: inputs.chart_names != ''
+    # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
+    # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
+    permissions:
+      contents: read
+      id-token: write
     strategy:
       fail-fast: true
       max-parallel: 1
