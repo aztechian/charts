@@ -15,13 +15,15 @@
 				"esbenp.prettier-vscode",
 				"GitHub.vscode-pull-request-github",
 				"donjayamanne.githistory",
-				"ms-kubernetes-tools.vscode-kubernetes-tools"
+				"ms-kubernetes-tools.vscode-kubernetes-tools",
+				"saoudrizwan.claude-dev",
+				"GitHub.vscode-github-actions"
 			]
 		}
 	},
-	"postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
 	"mounts": [
-		"source=${localEnv:HOME}/.kube,target=/home/vscode/.kube,type=bind,consistency=cached"
+		"source=${localEnv:HOME}/.kube,target=/home/vscode/.kube,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached"
 	]
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

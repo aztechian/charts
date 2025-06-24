@@ -1,17 +1,12 @@
 FROM mcr.microsoft.com/devcontainers/base:bullseye
+ARG ASDF_VER=0.18.0
+ENV ASDF_VER=${ASDF_VER} ASDF_DATA_DIR=/asdf PATH=/asdf/shims:${PATH}
 
 COPY ../.tool-versions /tmp/
 
 RUN cd /tmp && \
-  helmdocs=$(grep '^helm-docs' .tool-versions| cut -f2 -d ' ') && \
-  curl -sLO https://dl.k8s.io/release/v$(grep kubectl .tool-versions| cut -f2 -d ' ')/bin/linux/amd64/kubectl && \
-  curl -sL https://github.com/norwoodj/helm-docs/releases/download/v${helmdocs}/helm-docs_${helmdocs}_Linux_x86_64.tar.gz | tar xzf - && \
-  curl -sL https://get.helm.sh/helm-v$(grep '^helm ' .tool-versions|cut -f2 -d' ')-linux-amd64.tar.gz | tar xzf - && \
-  curl -sL https://github.com/instrumenta/kubeval/releases/download/v$(grep kubeval .tool-versions|cut -f2 -d' ')/kubeval-linux-amd64.tar.gz | tar xzf - && \
-  chmod 755 ./kubectl ./helm-docs ./linux-amd64/helm ./kubeval && \
-  mv ./kubectl /usr/local/bin/ && \
-  mv ./helm-docs /usr/local/bin/ && \
-  mv ./linux-amd64/helm /usr/local/bin/ && \
-  mv ./kubeval /usr/local/bin/ && \
-  cd - && \
-  rm -rf /tmp/* 
+  curl -sL https://github.com/asdf-vm/asdf/releases/download/v${ASDF_VER}/asdf-v${ASDF_VER}-linux-arm64.tar.gz | tar -zx && \
+  mv asdf /usr/bin/asdf && \
+  mkdir -p /asdf && \
+  grep -v '^#' .tool-versions | cut -f1 -d ' ' | xargs -n 1 asdf plugin add && \
+  asdf install
