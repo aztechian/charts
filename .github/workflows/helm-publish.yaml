@@ -53,6 +53,10 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v4
 
+      - name: Install the s3 plugin
+        run: |
+          helm plugin install https://github.com/hypnoglow/helm-s3.git
+
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
@@ -63,11 +67,11 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::642939544760:role/HelmChartPublish
           aws-region: us-east-2
-
+      
       - name: Helm release
-        uses: shellbear/helm-release-action@v0.3
-        with:
-          repo: s3://repos.imartin.io/charts
-          chart: ${{ matrix.chart }}
-          forceRelease: false
-          relativeUrls: true
+        id: helm-release
+        run: |
+          echo "::debug::chart = ${{ matrix.chart }}"
+          helm repo add target s3://repos.imartin.io/charts --force-update
+          helm package ${{ matrix.chart }} -u --destination .releases/
+          helm s3 push .releases/${{ matrix.chart }}-*.tgz target --ignore-if-exists --relative
