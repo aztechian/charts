@@ -536,6 +536,27 @@ entries:
   transmission:
   - apiVersion: v2
     appVersion: 4.0.6
+    created: "2025-06-24T18:28:47.219760759Z"
+    description: This chart creates a deployment of Transmission, a BitTorrent client.
+      Additionally, it creates a VPN connection to tunnel bittorrent traffic through.
+      The Transmission UI is still accessible via a Service and/or Ingress in the
+      cluster, but all torrent traffic is sent through the VPN interface.
+    digest: 7a1cf54abf70b57468f39e63b03e8eb7a3534c6266ee5d926fa03982a9b8771f
+    icon: https://transmissionbt.com/images/gearshift.png
+    maintainers:
+    - email: ian@imartin.net
+      name: Ian Martin
+    name: transmission
+    sources:
+    - https://github.com/dperson/openvpn-client/
+    - https://github.com/transmission/transmission
+    - https://hub.docker.com/r/linuxserver/transmission
+    type: application
+    urls:
+    - https://github.com/aztechian/charts/releases/download/transmission-2.0.3/transmission-2.0.3.tgz
+    version: 2.0.3
+  - apiVersion: v2
+    appVersion: 4.0.6
     created: "2024-11-19T03:16:35.877042628Z"
     description: This chart creates a deployment of Transmission, a BitTorrent client.
       Additionally, it creates a VPN connection to tunnel bittorrent traffic through.
@@ -651,4 +672,4 @@ entries:
     urls:
     - https://github.com/aztechian/charts/releases/download/youtubedl-material-0.2.0/youtubedl-material-0.2.0.tgz
     version: 0.2.0
-generated: "2025-06-12T18:23:58.852872281Z"
+generated: "2025-06-24T18:28:47.219833124Z"
