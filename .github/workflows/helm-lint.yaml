@@ -112,7 +112,7 @@ jobs:
 
           function filter_updates() {
             while read -r chart; do
-              if git diff --quiet ${{ steps.latest-tag.outputs.tag }} -- $chart/Chart.yaml; then
+              if ! git diff --quiet ${{ steps.latest-tag.outputs.tag }} -- $chart/Chart.yaml; then
                 echo "$chart"
               fi
             done
@@ -120,8 +120,12 @@ jobs:
 
           modified=$(git diff --find-renames --name-only ${{ steps.latest-tag.outputs.tag }} -- . | cut -d '/' -f1 | sort | uniq | filter_charts)
           echo "::debug::modified = ${modified}"
-          echo "::debug::final changed list = $(echo "$modified" | filter_updates)"
-          echo "changed=$(echo "$modified" | filter_updates)" >> $GITHUB_OUTPUT
+          changed_charts=$(echo "$modified" | filter_updates)
+          echo "::debug::final changed list = ${changed_charts}"
+          
+          # Convert multiline output to space-separated for GitHub Actions
+          changed_charts_output=$(echo "$changed_charts" | tr '\n' ' ' | sed 's/[[:space:]]*$//')
+          echo "changed=${changed_charts_output}" >> $GITHUB_OUTPUT
 
       - name: Comment PR with notice of changed chart
         if: steps.changed-charts.outputs.changed != ''
