@@ -1,6 +1,6 @@
 # emby
 
-![Version: 1.0.7](https://img.shields.io/badge/Version-1.0.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.8.11.0](https://img.shields.io/badge/AppVersion-4.8.11.0-informational?style=flat-square)
+![Version: 1.0.8](https://img.shields.io/badge/Version-1.0.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.1.90](https://img.shields.io/badge/AppVersion-4.9.1.90-informational?style=flat-square)
 
 A Helm chart for Emby Media Server. Run as a StatefulSet on kubernetes, so that volume management is safely done.
 
