@@ -46,7 +46,7 @@ jobs:
         chart: ${{ fromJson(needs.setup.outputs.chart_names) }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       
