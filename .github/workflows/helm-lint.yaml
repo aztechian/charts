@@ -92,38 +92,27 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
-      - name: Find base commit
-        id: latest-tag
-        run: |
-          git fetch --tags origin 2>/dev/null
-          echo "tag=$(if ! git describe --tags --abbrev=0 HEAD~ 2>/dev/null; then git rev-list --max-parents=0 --first-parent HEAD; fi)" >> $GITHUB_OUTPUT
-
       - name: Find Changed Charts
         id: changed-charts
         run: |
-          echo "::debug::using ${{ steps.latest-tag.outputs.tag }} as the latest tag"
-          function filter_charts() {
-            while read -r chart; do
-              if [[ -d $chart && -f $chart/Chart.yaml ]]; then 
-                echo "$chart"
-              fi
-            done
-          }
-
-          function filter_updates() {
-            while read -r chart; do
-              if ! git diff --quiet ${{ steps.latest-tag.outputs.tag }} -- $chart/Chart.yaml; then
-                echo "$chart"
-              fi
-            done
-          }
-
-          modified=$(git diff --find-renames --name-only ${{ steps.latest-tag.outputs.tag }} -- . | cut -d '/' -f1 | sort | uniq | filter_charts)
-          echo "::debug::modified = ${modified}"
-          echo "::debug::final changed list = $(echo "$modified" | filter_updates)"
+          git fetch --tags origin 2>/dev/null
+          base=$(git merge-base HEAD origin/${{ github.base_ref || 'main' }})
+          echo "::debug::using merge-base ${base} against origin/${{ github.base_ref || 'main' }}"
+          changed=""
+          for chart in $(git diff --find-renames --name-only "$base" -- . | cut -d'/' -f1 | sort -u); do
+            [[ -d "$chart" && -f "$chart/Chart.yaml" ]] || continue
+            latest_tag=$(git tag --list "${chart}-*" --sort=-version:refname | head -1)
+            echo "::debug::chart=${chart} latest_tag=${latest_tag}"
+            [[ -z "$latest_tag" ]] && continue  # new chart, no version bump required
+            if git diff --quiet "$latest_tag" -- "$chart/Chart.yaml"; then
+              changed+="${chart}"$'\n'
+            fi
+          done
+          changed="${changed%$'\n'}"
+          echo "::debug::charts needing version bump = ${changed}"
           {
             echo "changed<<EOF"
-            echo "$modified" | filter_updates
+            echo "$changed"
             echo "EOF"
           } >> $GITHUB_OUTPUT
 
