@@ -112,7 +112,7 @@ jobs:
 
           function filter_updates() {
             while read -r chart; do
-              if git diff --quiet ${{ steps.latest-tag.outputs.tag }} -- $chart/Chart.yaml; then
+              if ! git diff --quiet ${{ steps.latest-tag.outputs.tag }} -- $chart/Chart.yaml; then
                 echo "$chart"
               fi
             done
