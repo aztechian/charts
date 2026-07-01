@@ -76,4 +76,4 @@ jobs:
           echo "::debug::chart = ${{ matrix.chart }}"
           helm repo add target s3://repos.imartin.io/charts --force-update
           helm package ${{ matrix.chart }} -u --destination .releases/
-          helm s3 push .releases/${{ matrix.chart }}-*.tgz target --ignore-if-exists --relative
+          helm s3 push .releases/*.tgz target --ignore-if-exists --relative
