@@ -44,6 +44,7 @@ jobs:
           exit $ERROR
   helm-docs:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     permissions:
       contents: write
     steps:
@@ -83,6 +84,7 @@ jobs:
           fi
   helm-package-check:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     permissions:
       pull-requests: write
     steps:
