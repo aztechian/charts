@@ -38,6 +38,7 @@ jobs:
           for c in */Chart.yaml; do
             chart=$(dirname "$c")
             echo "::group::Linting $chart"
+            helm dependency build "$chart"
             helm lint "$chart" || ERROR=1
             echo "::endgroup::"
           done
