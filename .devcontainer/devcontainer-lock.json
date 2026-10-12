@@ -1,0 +1,29 @@
+{
+  "features": {
+    "ghcr.io/devcontainer-community/devcontainer-features/jq:1": {
+      "version": "1.0.2",
+      "resolved": "ghcr.io/devcontainer-community/devcontainer-features/jq@sha256:7ed274da0067ed8c998d296ae9e19b691d297e69ce150f19680f26a2783d0b6e",
+      "integrity": "sha256:7ed274da0067ed8c998d296ae9e19b691d297e69ce150f19680f26a2783d0b6e"
+    },
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+      "version": "1.3.1",
+      "resolved": "ghcr.io/devcontainers/features/kubectl-helm-minikube@sha256:bbe8adf6b37fff8c67412ab0a4579f4c2f30bbaba1d9a5cebd9e38bade54025b",
+      "integrity": "sha256:bbe8adf6b37fff8c67412ab0a4579f4c2f30bbaba1d9a5cebd9e38bade54025b"
+    },
+    "ghcr.io/dirsigler/devcontainer-features/helm-docs:1": {
+      "version": "1.0.3",
+      "resolved": "ghcr.io/dirsigler/devcontainer-features/helm-docs@sha256:152be7985341d3a813e72dea18cf84576e735661ae54b9ba4fda2767ffcfb1c9",
+      "integrity": "sha256:152be7985341d3a813e72dea18cf84576e735661ae54b9ba4fda2767ffcfb1c9"
+    },
+    "ghcr.io/gickis/devcontainer-features/kubeconform:1": {
+      "version": "1.0.1",
+      "resolved": "ghcr.io/gickis/devcontainer-features/kubeconform@sha256:df5c4c643e4ddb08a22283145b43e6c958aae6568590b904813e9576892bfc6f",
+      "integrity": "sha256:df5c4c643e4ddb08a22283145b43e6c958aae6568590b904813e9576892bfc6f"
+    },
+    "ghcr.io/mpriscella/features/helm-chart-testing:1": {
+      "version": "1.0.0",
+      "resolved": "ghcr.io/mpriscella/features/helm-chart-testing@sha256:30fb476c84b541879c1924114416908161c331f53945eb46ed6fe4a74df54473",
+      "integrity": "sha256:30fb476c84b541879c1924114416908161c331f53945eb46ed6fe4a74df54473"
+    }
+  }
+}

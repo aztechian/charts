@@ -2,11 +2,17 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/debian
 {
 	"name": "Charts",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"build": {
-		// Path is relative to the devcontainer.json file.
-		"dockerfile": "Dockerfile",
-		"context": ".."
+	"image": "mcr.microsoft.com/devcontainers/base:trixie",
+	"features": {
+		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+			"version": "1.33.7",
+			"helm": "3.22.0",
+			"minikube": "none"
+		},
+		"ghcr.io/devcontainer-community/devcontainer-features/jq:1": {},
+		"ghcr.io/gickis/devcontainer-features/kubeconform:1": {},
+		"ghcr.io/mpriscella/features/helm-chart-testing:1": {},
+		"ghcr.io/dirsigler/devcontainer-features/helm-docs:1": {}
 	},
 	"customizations": {
 		"vscode": {
@@ -14,10 +20,9 @@
 				"redhat.vscode-yaml",
 				"esbenp.prettier-vscode",
 				"GitHub.vscode-pull-request-github",
-				"donjayamanne.githistory",
 				"ms-kubernetes-tools.vscode-kubernetes-tools",
-				"saoudrizwan.claude-dev",
-				"GitHub.vscode-github-actions"
+				"GitHub.vscode-github-actions",
+				"vivswan.litellm-vscode-chat"
 			]
 		}
 	},
