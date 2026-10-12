@@ -55,7 +55,7 @@ spec:
             - name: serverIP
               value: {{ include "tdarr.fullname" . }}
             - name: serverPort
-              value: {{ .Values.service.port | quote }}
+              value: {{ .Values.service.serverPort | quote }}
             - name: PUID
               value: {{ .Values.node.puid | default .Values.server.puid | quote }}
             - name: PGID

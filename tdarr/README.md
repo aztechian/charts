@@ -1,6 +1,6 @@
 # tdarr
 
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.58.02](https://img.shields.io/badge/AppVersion-2.58.02-informational?style=flat-square)
+![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.91.01](https://img.shields.io/badge/AppVersion-2.91.01-informational?style=flat-square)
 
 Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes cluster
 
@@ -37,7 +37,7 @@ Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes 
 | node.cronPluginUpdate | string | `""` |  |
 | node.enabled | bool | `false` | Enable running Tdarr Nodes as a daemonset across the cluster. |
 | node.ffmpegPath | string | `""` |  |
-| node.ffmpegVersion | int | `6` |  |
+| node.ffmpegVersion | int | `7` |  |
 | node.handbrakePath | string | `""` |  |
 | node.image.repository | string | `"ghcr.io/haveagitgat/tdarr_node"` |  |
 | node.image.tag | string | `""` |  |
@@ -56,7 +56,7 @@ Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes 
 | server.ccextractorPath | string | `""` |  |
 | server.cronPluginUpdate | string | `""` |  |
 | server.ffmpegPath | string | `""` | Specify the path to a custom ffmpeg executable to use. |
-| server.ffmpegVersion | int | `6` | Override a specific version of ffmpeg used for transcode. |
+| server.ffmpegVersion | int | `7` | Override a specific version of ffmpeg used for transcode. |
 | server.handbrakePath | string | `""` |  |
 | server.intel | bool | `true` | set environment variabels that tell Tdarr to use Intel GPU hardware for transcodes. |
 | server.logLevel | string | `"info"` | Set the logging level of the Tdarr server (also used as the default value for nodes). |
