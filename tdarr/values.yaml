@@ -15,7 +15,7 @@ server:
   # -- If using Tdarr Pro, your API Key.
   apiKey: ""
   # -- Override a specific version of ffmpeg used for transcode.
-  ffmpegVersion: 6
+  ffmpegVersion: 7
   # -- Specify the path to a custom ffmpeg executable to use.
   ffmpegPath: ""
   mkvpropeditPath: ""
@@ -126,7 +126,7 @@ node:
   nodeSelector: {}
   tolerations: []
   affinity: {}
-  ffmpegVersion: 6
+  ffmpegVersion: 7
   ffmpegPath: ""
   mkvpropeditPath: ""
   handbrakePath: ""
