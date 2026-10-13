@@ -1,0 +1,6 @@
+---
+# Authentication explicitly disabled (renders auth="false"); no node key may be set with this.
+server:
+  auth: false
+node:
+  enabled: true

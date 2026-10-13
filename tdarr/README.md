@@ -1,6 +1,6 @@
 # tdarr
 
-![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.91.01](https://img.shields.io/badge/AppVersion-2.91.01-informational?style=flat-square)
+![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.91.01](https://img.shields.io/badge/AppVersion-2.91.01-informational?style=flat-square)
 
 Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes cluster
 
@@ -52,7 +52,7 @@ Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes 
 | node.tolerations | list | `[]` |  |
 | node.umask | string | reuse the PUID given to the server process (default `002`) | the umask to use for running Tdarr on the node. |
 | server.annotations | object | `{}` |  |
-| server.apiKey | string | `""` | If using Tdarr Pro, your API Key. |
+| server.auth | string | `nil` | Enable or disable Tdarr authentication (the `auth` env var on the server). Leave unset (`null`) to use Tdarr's own default (off for existing 2.x installs, on for new v3 installs). When `true`, every Node needs an API key, see `server.nodeApiKey`. Only the server needs this setting; nodes follow the server. |
 | server.ccextractorPath | string | `""` |  |
 | server.cronPluginUpdate | string | `""` |  |
 | server.ffmpegPath | string | `""` | Specify the path to a custom ffmpeg executable to use. |
@@ -61,10 +61,16 @@ Deploy Tdarr (https://home.tdarr.io) distributed transcoding in your Kubernetes 
 | server.intel | bool | `true` | set environment variabels that tell Tdarr to use Intel GPU hardware for transcodes. |
 | server.logLevel | string | `"info"` | Set the logging level of the Tdarr server (also used as the default value for nodes). |
 | server.mkvpropeditPath | string | `""` |  |
+| server.nodeApiKey.existingSecret | string | `""` | Name of an existing Secret (same namespace) holding the shared node API key. Takes precedence over `value`. |
+| server.nodeApiKey.existingSecretKey | string | `"nodeApiKey"` | The key within `existingSecret` that holds the node API key. |
+| server.nodeApiKey.value | string | `""` | The shared node API key. Must start with `tapi_`, be at least 14 characters long and only contain letters, numbers and underscores after `tapi_`. Stored in a Secret created by this chart. Ignored if `existingSecret` is set. Generate one with: `echo "tapi_$(openssl rand -hex 16)"` |
 | server.nvidia | bool | `true` | Set environment variables that tell Tdarr to use NVIDIA hardware for transcodes. |
 | server.openBrowser | bool | `true` |  |
 | server.persistence | object | `{"annotations":{},"enabled":true,"existingClaim":"","size":"1Gi","storageClass":"","subPath":""}` | Configure persistence for the Tdarr server. Note, this is the server configuration only If you want additional persistence for libraries, outputs, etc see `library` and `extraVolumes`/`extraClaims` |
 | server.pgid | int | `1000` | A Group ID for the Tdarr process to run as. |
+| server.proLicenseKey.existingSecret | string | `""` | Name of an existing Secret (same namespace) holding the Tdarr Pro licence key. Takes precedence over `value`. |
+| server.proLicenseKey.existingSecretKey | string | `"proLicenseKey"` | The key within `existingSecret` that holds the licence key. |
+| server.proLicenseKey.value | string | `""` | The Tdarr Pro licence key. Stored in a Secret created by this chart. Ignored if `existingSecret` is set. |
 | server.puid | int | `1000` | A User ID for the Tdarr process to run as. Note, that the default docker image must initially start as root(0) and then switches to this UID/GID. So the pod must still run as root, although in reality this security risk is only in place for a moment during startup. |
 | server.resources | object | `{"limits":{"cpu":"1000m","memory":"1Gi"},"requests":{"cpu":"100m","memory":"256Mi"}}` | Resource requests and limits for the Tdarr Server |
 | server.timezone | string | `"Europe/London"` | The timezone used by the server process. Will be used for all nodes as well. |

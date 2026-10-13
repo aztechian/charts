@@ -1,0 +1,4 @@
+---
+# Authentication enabled on the server without any chart-managed keys.
+server:
+  auth: true

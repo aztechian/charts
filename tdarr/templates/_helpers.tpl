@@ -51,6 +51,68 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Tdarr Pro licence key value set directly. `server.apiKey` is the deprecated name for this value.
+*/}}
+{{- define "tdarr.proKey.value" -}}
+{{- $legacy := .Values.server.apiKey | default "" -}}
+{{- .Values.server.proLicenseKey.value | default $legacy -}}
+{{- end }}
+
+{{/*
+Renders "true" if a Tdarr Pro licence key is configured (directly or via an existing Secret)
+*/}}
+{{- define "tdarr.proKey.enabled" -}}
+{{- if or .Values.server.proLicenseKey.existingSecret (include "tdarr.proKey.value" .) -}}true{{- end -}}
+{{- end }}
+
+{{/*
+Renders "true" if a shared node API key is configured (directly or via an existing Secret)
+*/}}
+{{- define "tdarr.nodeKey.enabled" -}}
+{{- if or .Values.server.nodeApiKey.existingSecret .Values.server.nodeApiKey.value -}}true{{- end -}}
+{{- end }}
+
+{{/*
+Name of the Secret created by this chart to hold directly-set keys
+*/}}
+{{- define "tdarr.keysSecretName" -}}
+{{- printf "%s-keys" (include "tdarr.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{/*
+Renders "true" if this chart needs to create a Secret for directly-set keys
+*/}}
+{{- define "tdarr.keysSecret.enabled" -}}
+{{- if or (and (include "tdarr.proKey.value" .) (not .Values.server.proLicenseKey.existingSecret)) (and .Values.server.nodeApiKey.value (not .Values.server.nodeApiKey.existingSecret)) -}}true{{- end -}}
+{{- end }}
+
+{{/*
+Secret reference (name/key) for the Tdarr Pro licence key
+*/}}
+{{- define "tdarr.proKey.secretRef" -}}
+{{- if .Values.server.proLicenseKey.existingSecret -}}
+name: {{ .Values.server.proLicenseKey.existingSecret }}
+key: {{ .Values.server.proLicenseKey.existingSecretKey }}
+{{- else -}}
+name: {{ include "tdarr.keysSecretName" . }}
+key: proLicenseKey
+{{- end }}
+{{- end }}
+
+{{/*
+Secret reference (name/key) for the shared node API key
+*/}}
+{{- define "tdarr.nodeKey.secretRef" -}}
+{{- if .Values.server.nodeApiKey.existingSecret -}}
+name: {{ .Values.server.nodeApiKey.existingSecret }}
+key: {{ .Values.server.nodeApiKey.existingSecretKey }}
+{{- else -}}
+name: {{ include "tdarr.keysSecretName" . }}
+key: nodeApiKey
+{{- end }}
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "tdarr.serviceAccountName" -}}
