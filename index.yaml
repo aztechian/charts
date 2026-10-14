@@ -84,6 +84,25 @@ entries:
     version: 1.3.3
   emby:
   - apiVersion: v2
+    appVersion: 4.10.1.0
+    created: "2026-10-14T23:42:36.984628909Z"
+    description: A Helm chart for Emby Media Server. Run as a StatefulSet on kubernetes,
+      so that volume management is safely done.
+    digest: cac8c4d2e6f7f5d9ae55f904d60fea6062a91e2c4eb21947002d2a5ee83d07c0
+    icon: https://avatars3.githubusercontent.com/u/3607473?s=200&v=4
+    maintainers:
+    - email: ian@imartin.net
+      name: Ian Martin
+      url: https://imartin.net
+    name: emby
+    sources:
+    - https://github.com/MediaBrowser/Emby
+    - https://github.com/MediaBrowser/Emby.Build
+    type: application
+    urls:
+    - https://github.com/aztechian/charts/releases/download/emby-1.0.11/emby-1.0.11.tgz
+    version: 1.0.11
+  - apiVersion: v2
     appVersion: 4.9.5.0
     created: "2026-07-01T05:54:11.954640021Z"
     description: A Helm chart for Emby Media Server. Run as a StatefulSet on kubernetes,
@@ -809,4 +828,4 @@ entries:
     urls:
     - https://github.com/aztechian/charts/releases/download/youtubedl-material-0.2.0/youtubedl-material-0.2.0.tgz
     version: 0.2.0
-generated: "2026-10-14T23:40:55.925205647Z"
+generated: "2026-10-14T23:42:36.984755316Z"
