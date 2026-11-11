@@ -14,6 +14,10 @@ spec:
   template:
     metadata:
       labels: {{- include "tdarr.selectorLabels" . | nindent 8 }}
+      {{- if include "tdarr.keysSecret.enabled" . }}
+      annotations:
+        checksum/keys: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+      {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -28,9 +32,24 @@ spec:
             - containerPort: {{ .Values.service.webPort }}
               name: web
           env:
-            {{- if .Values.server.apiKey }}
+            {{- if not (kindIs "invalid" .Values.server.auth) }}
+            {{- if and (eq (toString .Values.server.auth) "false") (include "tdarr.nodeKey.enabled" .) }}
+            {{- fail "server.auth is false but a node API key is configured; set server.auth to true (or unset it), or remove server.nodeApiKey" }}
+            {{- end }}
+            - name: auth
+              value: {{ .Values.server.auth | toString | quote }}
+            {{- end }}
+            {{- if include "tdarr.proKey.enabled" . }}
             - name: TDARR_API_KEY
-              value: {{ .Values.server.apiKey }}
+              valueFrom:
+                secretKeyRef:
+                  {{- include "tdarr.proKey.secretRef" . | nindent 18 }}
+            {{- end }}
+            {{- if include "tdarr.nodeKey.enabled" . }}
+            - name: seededApiKey
+              valueFrom:
+                secretKeyRef:
+                  {{- include "tdarr.nodeKey.secretRef" . | nindent 18 }}
             {{- end }}
             {{- if .Values.server.nvidia }}
             - name: NVIDIA_VISIBLE_DEVICES

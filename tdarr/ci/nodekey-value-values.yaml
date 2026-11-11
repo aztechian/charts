@@ -1,0 +1,8 @@
+---
+# Shared node API key set directly: helm value -> chart-managed Secret -> server (seededApiKey) and nodes (apiKey).
+server:
+  auth: true
+  nodeApiKey:
+    value: tapi_ci_test_node_key_0123456789
+node:
+  enabled: true

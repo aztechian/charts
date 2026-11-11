@@ -1,0 +1,4 @@
+---
+# Server plus the node DaemonSet, no keys configured.
+node:
+  enabled: true

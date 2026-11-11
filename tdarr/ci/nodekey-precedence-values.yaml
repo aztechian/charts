@@ -1,0 +1,9 @@
+---
+# existingSecret takes precedence over a directly-set value, so no Secret is created for the node key.
+server:
+  auth: true
+  nodeApiKey:
+    value: tapi_ci_test_node_key_0123456789
+    existingSecret: tdarr-node-key
+node:
+  enabled: true

@@ -17,6 +17,10 @@ spec:
   template:
     metadata:
       labels: {{- include "tdarr.selectorLabels" . | nindent 8 }}
+      {{- if include "tdarr.keysSecret.enabled" . }}
+      annotations:
+        checksum/keys: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+      {{- end }}
     spec:
       {{- with .Values.node.tolerations }}
       tolerations:
@@ -52,6 +56,12 @@ spec:
             {{- end }}
             - name: inContainer
               value: "true"
+            {{- if include "tdarr.nodeKey.enabled" . }}
+            - name: apiKey
+              valueFrom:
+                secretKeyRef:
+                  {{- include "tdarr.nodeKey.secretRef" . | nindent 18 }}
+            {{- end }}
             - name: serverIP
               value: {{ include "tdarr.fullname" . }}
             - name: serverPort

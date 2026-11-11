@@ -11,9 +11,33 @@ nameOverride: ""
 fullnameOverride: ""
 
 server:
+  # -- Enable or disable Tdarr authentication (the `auth` env var on the server). Leave unset (`null`) to use Tdarr's own default
+  # (off for existing 2.x installs, on for new v3 installs). When `true`, every Node needs an API key, see `server.nodeApiKey`.
+  # Only the server needs this setting; nodes follow the server.
+  auth: null
   # settings for tdarr server configuration file
-  # -- If using Tdarr Pro, your API Key.
-  apiKey: ""
+  # Your Tdarr Pro licence key (rendered as the `TDARR_API_KEY` env var on the server).
+  # This is NOT the key that Tdarr Nodes use to authenticate, see `server.nodeApiKey`.
+  # The old `server.apiKey` value is deprecated, but is still honoured as a fallback for `server.proLicenseKey.value`.
+  proLicenseKey:
+    # -- The Tdarr Pro licence key. Stored in a Secret created by this chart. Ignored if `existingSecret` is set.
+    value: ""
+    # -- Name of an existing Secret (same namespace) holding the Tdarr Pro licence key. Takes precedence over `value`.
+    existingSecret: ""
+    # -- The key within `existingSecret` that holds the licence key.
+    existingSecretKey: proLicenseKey
+  # A single API key shared by the Tdarr Server and all Tdarr Nodes (the DaemonSet nodes), for use with Tdarr authentication.
+  # The Server receives it as `seededApiKey` (it creates the key at startup, and if there are no users it also creates an
+  # `admin` user using the key as its password), and each Node receives it as `apiKey`.
+  nodeApiKey:
+    # -- The shared node API key. Must start with `tapi_`, be at least 14 characters long and only contain letters,
+    # numbers and underscores after `tapi_`. Stored in a Secret created by this chart. Ignored if `existingSecret` is set.
+    # Generate one with: `echo "tapi_$(openssl rand -hex 16)"`
+    value: ""
+    # -- Name of an existing Secret (same namespace) holding the shared node API key. Takes precedence over `value`.
+    existingSecret: ""
+    # -- The key within `existingSecret` that holds the node API key.
+    existingSecretKey: nodeApiKey
   # -- Override a specific version of ffmpeg used for transcode.
   ffmpegVersion: 7
   # -- Specify the path to a custom ffmpeg executable to use.

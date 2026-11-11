@@ -1,0 +1,4 @@
+---
+# Deprecated `server.apiKey` is still honoured as a fallback for `server.proLicenseKey.value`.
+server:
+  apiKey: ci-test-legacy-pro-license-key

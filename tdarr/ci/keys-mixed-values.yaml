@@ -1,0 +1,11 @@
+---
+# Mixed sources: Pro licence from an existing Secret, node key set directly.
+# Only the node key is stored in the chart-managed Secret.
+server:
+  auth: true
+  proLicenseKey:
+    existingSecret: tdarr-pro-license
+  nodeApiKey:
+    value: tapi_ci_test_node_key_0123456789
+node:
+  enabled: true

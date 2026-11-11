@@ -1,0 +1,32 @@
+---
+# Most features at once.
+server:
+  auth: true
+  ffmpegVersion: 7
+  proLicenseKey:
+    value: ci-test-pro-license-key
+  nodeApiKey:
+    value: tapi_ci_test_node_key_0123456789
+  persistence:
+    size: 2Gi
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+    requests:
+      cpu: 200m
+      memory: 512Mi
+node:
+  enabled: true
+  ffmpegVersion: 7
+  logLevel: debug
+library:
+  enabled: true
+  volume:
+    size: 10Gi
+ingress:
+  enabled: true
+  className: nginx
+  hostname: tdarr.example.com
+serviceAccount:
+  create: true
