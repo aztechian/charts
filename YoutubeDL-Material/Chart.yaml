@@ -1,24 +1,30 @@
 apiVersion: v2
 name: youtubedl-material
 description: |-
-  A Helm chart for https://github.com/Tzahi12345/YoutubeDL-Material
-  
+  A Helm chart for https://github.com/voc0der/ytdl-material
+
   ## Note:
 
-  > This Chart is a re-hosting of the official YoutubeDL-Material repository
-  Since the [YoutubeDL-Material](https://github.com/Tzahi12345/YoutubeDL-Material) doesn't have a way to directly
-  use their helm chart (ie, its not in a helm repository), this version is an unmodified copy of that chart
-  but ends up being published to https://repos.imartin.io/charts for ease-of-use.
+  > This chart deploys [ytdl-material](https://github.com/voc0der/ytdl-material), the maintained fork of
+  [YoutubeDL-Material](https://github.com/Tzahi12345/YoutubeDL-Material). It is based on the chart that ships
+  with that repository, but since neither project publishes it to a helm repository, it is hosted here at
+  https://repos.imartin.io/charts for ease-of-use.
+  The chart name is unchanged from earlier releases (which used the original Tzahi12345 image), so existing
+  releases and their volumes can be upgraded in place.
 
 type: application
+
+# networking.k8s.io/v1 Ingress, used by templates/ingress.yaml, requires Kubernetes 1.19.
+kubeVersion: ">=1.19.0-0"
 
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.2.0
+version: 1.0.0
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
+# The image tag is derived from this as "v<appVersion>", matching the upstream image tags.
 # It is recommended to use it with quotes.
-appVersion: "4.3.2"
+appVersion: "1.3.4"
