@@ -13,6 +13,10 @@ https://repos.imartin.io/charts for ease-of-use.
 The chart name is unchanged from earlier releases (which used the original Tzahi12345 image), so existing
 releases and their volumes can be upgraded in place.
 
+## Requirements
+
+Kubernetes: `>=1.19.0-0`
+
 ## Values
 
 | Key | Type | Default | Description |
