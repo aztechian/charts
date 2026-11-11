@@ -1,27 +1,31 @@
 # youtubedl-material
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.3.2](https://img.shields.io/badge/AppVersion-4.3.2-informational?style=flat-square)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.3.4](https://img.shields.io/badge/AppVersion-1.3.4-informational?style=flat-square)
 
-A Helm chart for https://github.com/Tzahi12345/YoutubeDL-Material
+A Helm chart for https://github.com/voc0der/ytdl-material
 
 ## Note:
 
-> This Chart is a re-hosting of the official YoutubeDL-Material repository
-Since the [YoutubeDL-Material](https://github.com/Tzahi12345/YoutubeDL-Material) doesn't have a way to directly
-use their helm chart (ie, its not in a helm repository), this version is an unmodified copy of that chart
-but ends up being published to https://repos.imartin.io/charts for ease-of-use.
+> This chart deploys [ytdl-material](https://github.com/voc0der/ytdl-material), the maintained fork of
+[YoutubeDL-Material](https://github.com/Tzahi12345/YoutubeDL-Material). It is based on the chart that ships
+with that repository, but since neither project publishes it to a helm repository, it is hosted here at
+https://repos.imartin.io/charts for ease-of-use.
+The chart name is unchanged from earlier releases (which used the original Tzahi12345 image), so existing
+releases and their volumes can be upgraded in place.
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
+| env | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"tzahi12345/youtubedl-material"` |  |
+| image.repository | string | `"voc0der/ytdl-material"` |  |
 | image.tag | string | `""` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
+| ingress.className | string | `""` |  |
 | ingress.enabled | bool | `false` |  |
 | ingress.hosts[0].host | string | `"chart-example.local"` |  |
 | ingress.hosts[0].paths | list | `[]` |  |
